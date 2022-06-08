@@ -16,6 +16,7 @@ class ZOMBIESHOOTING_API ATitle_PC : public APlayerController
 	
 public:
 	virtual void BeginPlay() override;
+
 	ATitle_PC();
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = UI)
