@@ -9,11 +9,28 @@
 /**
  * 
  */
+struct FPlayerDataTable;
+class UDataTable;
+
 UCLASS()
 class ZOMBIESHOOTING_API UMyGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
 	
 public:
-	void JsonSave();
+	UMyGameInstance();
+
+	// 데이터 값 얻어오기(이어하기에서 사용?)
+	FString GetPlayerName();
+	int GetPlayerHp();
+	FString GetPlayerGun();
+	int GetPlayerStage();
+
+	// Json 관련 (현재는 미사용)
+	//void JsonSave();
+	//void JsonLoad();
+
+private:
+	UPROPERTY()
+		UDataTable* FPlayerTable;
 };

@@ -4,7 +4,7 @@
 #include "Title_PC.h"
 #include "MainTitle_UW.h"
 #include "Kismet/GameplayStatics.h"
-// #include "PlayerInstance.h" 만들어서 사용
+#include "MyGameInstance.h"
 
 ATitle_PC::ATitle_PC()
 {
@@ -36,7 +36,8 @@ void ATitle_PC::BeginPlay()
 void ATitle_PC::PlayGame()
 {
 	// 여기서 GameInstance를 사용해서 Json 파일을 디폴트 값으로 설정하고
-
+	UMyGameInstance* MyGI = GetGameInstance<UMyGameInstance>();
+	//GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, MyGI->myPlayerData->PlayerName);
 	// 그거에 맞는 레벨을 실행한다. (이거도 GameInstance 값 따라서 OpenLevel 하도록 설정하자)
 	UGameplayStatics::OpenLevel(GetWorld(), FName("FirstPersonExampleMap"));
 }
@@ -44,7 +45,8 @@ void ATitle_PC::PlayGame()
 void ATitle_PC::ReplayGame()
 {
 	// 여기서 GameInstance를 사용해서 원래 있던 Json 파일을 읽어와서 그 값대로 
-
+	UMyGameInstance* MyGI = GetGameInstance<UMyGameInstance>();
+	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, MyGI->GetPlayerName());
 	// 그거에 맞는 레벨을 실행한다. (이거도 GameInstance 값 따라서 OpenLevel 하도록 설정하자)
 	UGameplayStatics::OpenLevel(GetWorld(), FName("FirstPersonExampleMap"));
 }
