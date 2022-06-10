@@ -87,3 +87,25 @@ int UMyGameInstance::GetPlayerStage()
 	int PlayerStage = PlayerData->PlayerStage;
 	return PlayerStage;
 }
+
+float UMyGameInstance::GetPlayerBgmPower()
+{
+	FPlayerDataTable* PlayerData = FPlayerTable->FindRow<FPlayerDataTable>("PlayerInfo", TEXT(""));
+	float PlayerBgmPower = PlayerData->PlayerBgmPower;
+	return PlayerBgmPower;
+}
+
+void UMyGameInstance::SetPlayerBgmPower(float fBgmPower)
+{
+	FPlayerDataTable* PlayerData = FPlayerTable->FindRow<FPlayerDataTable>("PlayerInfo", TEXT(""));
+	PlayerData->PlayerBgmPower = fBgmPower;
+}
+
+void UMyGameInstance::SetPlayerDataDefault()
+{
+	FPlayerDataTable* PlayerData = FPlayerTable->FindRow<FPlayerDataTable>("PlayerInfo", TEXT(""));
+	PlayerData->PlayerName = "Player";
+	PlayerData->PlayerHp = 100;
+	PlayerData->PlayerGun = "Punch";
+	PlayerData->PlayerStage = 1;
+}

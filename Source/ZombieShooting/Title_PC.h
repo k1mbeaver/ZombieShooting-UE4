@@ -27,5 +27,7 @@ public:
 	void PlayGame();
 	void ReplayGame();
 	void SettingGame();
+	void BackSetting();
+	void CheckSetting();
 	void ExitGame();
 };

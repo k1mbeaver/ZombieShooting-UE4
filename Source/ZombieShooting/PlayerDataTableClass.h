@@ -29,6 +29,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		int PlayerStage;
 
+	//BGM Power
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float PlayerBgmPower;
+
 };
 
 UCLASS()

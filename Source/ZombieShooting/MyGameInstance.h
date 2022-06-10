@@ -25,6 +25,9 @@ public:
 	int GetPlayerHp();
 	FString GetPlayerGun();
 	int GetPlayerStage();
+	float GetPlayerBgmPower();
+	void SetPlayerBgmPower(float fBgmPower);
+	void SetPlayerDataDefault();
 
 	// Json 관련 (현재는 미사용)
 	//void JsonSave();
