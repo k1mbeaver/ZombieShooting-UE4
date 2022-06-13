@@ -29,6 +29,14 @@ public:
 	void SetPlayerBgmPower(float fBgmPower);
 	void SetPlayerDataDefault();
 
+	// 몬스터 데이터값 얻어오기
+
+	FString GetMonsterName(FString MonsterType);
+	int GetMonsterHp(FString MonsterType);
+	float GetMonsterSpeed(FString MonsterType);
+	float GetMonsterAttackDamage(FString MonsterType);
+	float GetMonsterAttackSpeed(FString MonsterType);
+
 	// Json 관련 (현재는 미사용)
 	//void JsonSave();
 	//void JsonLoad();
@@ -36,4 +44,7 @@ public:
 private:
 	UPROPERTY()
 		UDataTable* FPlayerTable;
+
+	UPROPERTY()
+		UDataTable* FMonsterTable;
 };

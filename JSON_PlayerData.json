@@ -1,0 +1,18 @@
+[
+	{
+		"Name": "PlayerInfo",
+		"PlayerName": "Beaver",
+		"PlayerHp": 100,
+		"PlayerGun": "Riffle",
+		"PlayerStage": 50,
+		"PlayerBgmPower": 3
+	},
+	{
+		"Name": "Default",
+		"PlayerName": "Player",
+		"PlayerHp": 100,
+		"PlayerGun": "Punch",
+		"PlayerStage": 1,
+		"PlayerBgmPower": 5
+	}
+]

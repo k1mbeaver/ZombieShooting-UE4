@@ -3,15 +3,23 @@
 
 #include "MyGameInstance.h"
 #include "PlayerDataTableClass.h"
+#include "MonsterDataTableClass.h"
 
 UMyGameInstance::UMyGameInstance()
 {
 	FString PlayerDataPath = TEXT("DataTable'/Game/File/Json/PlayerData.PlayerData'");
+	FString MonsterDataPath = TEXT("DataTable'/Game/File/Json/MonsterData.MonsterData'");
 	//E:/Unreal/ZombieShooting/Content/File/Json/PlayerData.uasset
 	static ConstructorHelpers::FObjectFinder<UDataTable> DT_ABPLAYER(*PlayerDataPath);
+	static ConstructorHelpers::FObjectFinder<UDataTable> DT_ABMONSTER(*MonsterDataPath);
 	if (DT_ABPLAYER.Succeeded())
 	{
 		FPlayerTable = DT_ABPLAYER.Object;
+	}
+
+	if (DT_ABMONSTER.Succeeded())
+	{
+		FMonsterTable = DT_ABMONSTER.Object;
 	}
 }
 
@@ -101,11 +109,50 @@ void UMyGameInstance::SetPlayerBgmPower(float fBgmPower)
 	PlayerData->PlayerBgmPower = fBgmPower;
 }
 
+// 몬스터 데이터값 얻어오기
+
+FString UMyGameInstance::GetMonsterName(FString MonsterType)
+{
+	FMonsterDataTable* MonsterData = FMonsterTable->FindRow<FMonsterDataTable>(*MonsterType, TEXT(""));
+	FString MonsterName = MonsterData->MonsterName;
+	return MonsterName;
+}
+
+int UMyGameInstance::GetMonsterHp(FString MonsterType)
+{
+	FMonsterDataTable* MonsterData = FMonsterTable->FindRow<FMonsterDataTable>(*MonsterType, TEXT(""));
+	int MonsterHp = MonsterData->MonsterHp;
+	return MonsterHp;
+}
+
+float UMyGameInstance::GetMonsterSpeed(FString MonsterType)
+{
+	FMonsterDataTable* MonsterData = FMonsterTable->FindRow<FMonsterDataTable>(*MonsterType, TEXT(""));
+	float MonsterSpeed = MonsterData->MonsterSpeed;
+	return MonsterSpeed;
+}
+
+float UMyGameInstance::GetMonsterAttackDamage(FString MonsterType)
+{
+	FMonsterDataTable* MonsterData = FMonsterTable->FindRow<FMonsterDataTable>(*MonsterType, TEXT(""));
+	float MonsterAttackDamage = MonsterData->MonsterAttackDamage;
+	return MonsterAttackDamage;
+}
+
+float UMyGameInstance::GetMonsterAttackSpeed(FString MonsterType)
+{
+	FMonsterDataTable* MonsterData = FMonsterTable->FindRow<FMonsterDataTable>(*MonsterType, TEXT(""));
+	float MonsterAttackSpeed = MonsterData->MonsterAttackSpeed;
+	return MonsterAttackSpeed;
+}
+
+// 여기서는 PlayerInfo말고 Default를 사용하게 해보자!
 void UMyGameInstance::SetPlayerDataDefault()
 {
 	FPlayerDataTable* PlayerData = FPlayerTable->FindRow<FPlayerDataTable>("PlayerInfo", TEXT(""));
-	PlayerData->PlayerName = "Player";
-	PlayerData->PlayerHp = 100;
-	PlayerData->PlayerGun = "Punch";
-	PlayerData->PlayerStage = 1;
+	FPlayerDataTable* DefaultData = FPlayerTable->FindRow<FPlayerDataTable>("Default", TEXT(""));
+	PlayerData->PlayerName = DefaultData->PlayerName;
+	PlayerData->PlayerHp = DefaultData->PlayerHp;
+	PlayerData->PlayerGun = DefaultData->PlayerGun;
+	PlayerData->PlayerStage = DefaultData->PlayerStage;
 }
