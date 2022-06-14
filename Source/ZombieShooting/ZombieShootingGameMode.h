@@ -13,6 +13,7 @@ class AZombieShootingGameMode : public AGameModeBase
 
 public:
 	AZombieShootingGameMode();
+	virtual void PostLogin(APlayerController* NewPlayer) override; // 이 과정에서 플레이어 설정이 진행된다.
 };
 
 
