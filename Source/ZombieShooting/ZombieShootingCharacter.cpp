@@ -126,16 +126,16 @@ void AZombieShootingCharacter::SetupPlayerInputComponent(class UInputComponent* 
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AZombieShootingCharacter::OnResetVR);
 
 	// Bind movement events
-	PlayerInputComponent->BindAxis("MoveForward", this, &AZombieShootingCharacter::MoveForward);
-	PlayerInputComponent->BindAxis("MoveRight", this, &AZombieShootingCharacter::MoveRight);
+	//PlayerInputComponent->BindAxis("MoveForward", this, &AZombieShootingCharacter::MoveForward);
+	//PlayerInputComponent->BindAxis("MoveRight", this, &AZombieShootingCharacter::MoveRight);
 
 	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
 	// "turn" handles devices that provide an absolute delta, such as a mouse.
 	// "turnrate" is for devices that we choose to treat as a rate of change, such as an analog joystick
-	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
-	PlayerInputComponent->BindAxis("TurnRate", this, &AZombieShootingCharacter::TurnAtRate);
-	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
-	PlayerInputComponent->BindAxis("LookUpRate", this, &AZombieShootingCharacter::LookUpAtRate);
+	//PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
+	//PlayerInputComponent->BindAxis("TurnRate", this, &AZombieShootingCharacter::TurnAtRate);
+	//PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
+	//PlayerInputComponent->BindAxis("LookUpRate", this, &AZombieShootingCharacter::LookUpAtRate);
 }
 
 void AZombieShootingCharacter::OnFire()
