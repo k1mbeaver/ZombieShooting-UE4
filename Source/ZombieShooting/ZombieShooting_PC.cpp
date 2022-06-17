@@ -2,6 +2,7 @@
 
 
 #include "ZombieShooting_PC.h"
+#include "MyCharacter.h"
 
 AZombieShooting_PC::AZombieShooting_PC()
 {
@@ -11,7 +12,7 @@ AZombieShooting_PC::AZombieShooting_PC()
 void AZombieShooting_PC::OnPossess(APawn* aPawn)
 {
 	Super::OnPossess(aPawn);
-	//myCharacter = Cast<AZombieShootingCharacter>(aPawn);
+	myCharacter = Cast<AMyCharacter>(aPawn);
 	//GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("Success!"));
 }
 
@@ -30,10 +31,10 @@ void AZombieShooting_PC::SetupInputComponent()
 
 	// 움직임
 
-	//InputComponent->BindAxis(TEXT("MoveForward"), this, &AZombieShooting_PC::MoveForward);
-	//InputComponent->BindAxis(TEXT("MoveRight"), this, &AZombieShooting_PC::MoveRight);
-	//InputComponent->BindAxis(TEXT("LookUp"), this, &AZombieShooting_PC::LookUpAtRate);
-	//InputComponent->BindAxis(TEXT("Turn"), this, &AZombieShooting_PC::TurnAtRate);
+	InputComponent->BindAxis(TEXT("MoveForward"), this, &AZombieShooting_PC::MoveForward);
+	InputComponent->BindAxis(TEXT("MoveRight"), this, &AZombieShooting_PC::MoveRight);
+	InputComponent->BindAxis(TEXT("LookUp"), this, &AZombieShooting_PC::LookUpAtRate);
+	InputComponent->BindAxis(TEXT("Turn"), this, &AZombieShooting_PC::TurnAtRate);
 
 	// 액션
 
@@ -44,7 +45,7 @@ void AZombieShooting_PC::SetupInputComponent()
 	//InputComponent->BindAction(TEXT("Run"), EInputEvent::IE_Released, this, &AABPlayerController::StopRun);
 }
 
-/*
+
 void AZombieShooting_PC::MoveForward(float Value)
 {
 	//APawn* const myPawn = GetPawn();
@@ -86,4 +87,3 @@ void AZombieShooting_PC::LookUpAtRate(float Rate)
 	// calculate delta for this frame from the rate information
 	myCharacter->AddControllerPitchInput(Rate);
 }
-*/

@@ -18,18 +18,18 @@ public:
 	virtual void OnPossess(APawn* aPawn) override;
 	virtual void PostInitializeComponents() override; // 여기서 빙의되는지 알 수 있음
 	virtual void SetupInputComponent() override;
-
+ 
 private:
 	//UPROPERTY()
-	//class AZombieShootingCharacter* myCharacter;
+	class AMyCharacter* myCharacter;
 
 protected:
 	//UFUNCTION()
-	//void MoveForward(float Val);
+	void MoveForward(float Val);
 	//UFUNCTION()
-	//void MoveRight(float Val);
+	void MoveRight(float Val);
 	//UFUNCTION()
-	//void TurnAtRate(float Rate);
+	void TurnAtRate(float Rate);
 	//UFUNCTION()
-	//void LookUpAtRate(float Rate);
+	void LookUpAtRate(float Rate);
 };

@@ -3,21 +3,29 @@
 
 #include "MyCharacter.h"
 #include "Kismet/GameplayStatics.h"
+#include "Camera/CameraComponent.h"
+#include "GameFrameWork/SpringArmComponent.h"
+#include "Components/CapsuleComponent.h"
+#include "GameFrameWork/CharacterMovementComponent.h"
 
 // Sets default values
 AMyCharacter::AMyCharacter()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	//SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SPRINGARM"));
-	//Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("CAMERA"));
+	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SPRINGARM"));
+	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("CAMERA"));
 
-	//SpringArm->SetupAttachment(GetCapsuleComponent());
-	//Camera->SetupAttachment(SpringArm);
+	SpringArm->SetupAttachment(GetCapsuleComponent());
+	Camera->SetupAttachment(SpringArm);
 
 	GetMesh()->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -88.0f), FRotator(0.0f, -90.0f, 0.0f));
-	//SpringArm->TargetArmLength = 400.0f;
-	//SpringArm->SetRelativeRotation(FRotator(-15.0f, 0.0f, 0.0f));
+	SpringArm->TargetArmLength = 400.0f;
+	SpringArm->SetRelativeRotation(FRotator(-15.0f, 0.0f, 0.0f));
+
+
+	SpringArm->bUsePawnControlRotation = true; // LookUpÀ» À§ÇÔ
+	//Camera->bUsePawnControlRotation = true;
 
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> SK_EASYMODEL(TEXT("/Game/File/Mesh/Murdock.Murdock"));
 	if (SK_EASYMODEL.Succeeded())
@@ -33,10 +41,10 @@ AMyCharacter::AMyCharacter()
 		//GetMesh()->SetAnimInstanceClass(PLAYER_ANIM.Class);
 	//}
 
-	//GetCharacterMovement()->JumpZVelocity = 400.0f;
-	//GetCharacterMovement()->MaxWalkSpeed = 200.0f;
+	GetCharacterMovement()->JumpZVelocity = 400.0f;
+	GetCharacterMovement()->MaxWalkSpeed = 500.0f;
 
-	//GetCapsuleComponent()->SetCollisionProfileName(TEXT("MyCharacter"));
+	GetCapsuleComponent()->SetCollisionProfileName(TEXT("MyCharacter"));
 }
 
 void AMyCharacter::PostInitializeComponents()
@@ -63,8 +71,8 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	PlayerInputComponent->BindAxis(TEXT("UpDown"), this, &AMyCharacter::UpDown);
-	PlayerInputComponent->BindAxis(TEXT("LeftRight"), this, &AMyCharacter::LeftRight);
+	PlayerInputComponent->BindAxis(TEXT("MoveForward"), this, &AMyCharacter::UpDown);
+	PlayerInputComponent->BindAxis(TEXT("MoveRight"), this, &AMyCharacter::LeftRight);
 	PlayerInputComponent->BindAxis(TEXT("LookUp"), this, &AMyCharacter::LookUp);
 	PlayerInputComponent->BindAxis(TEXT("Turn"), this, &AMyCharacter::Turn);
 }
