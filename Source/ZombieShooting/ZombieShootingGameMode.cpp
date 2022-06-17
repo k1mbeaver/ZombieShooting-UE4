@@ -11,9 +11,9 @@ AZombieShootingGameMode::AZombieShootingGameMode()
 	//: Super()
 {
 	// set default pawn class to our Blueprinted character
-	DefaultPawnClass = AMyCharacter::StaticClass();
-	//static ConstructorHelpers::FClassFinder<APawn> PlayerPawnClassFinder(TEXT("/Game/FirstPersonCPP/Blueprints/FirstPersonCharacter"));
-	//DefaultPawnClass = PlayerPawnClassFinder.Class;
+	//DefaultPawnClass = AMyCharacter::StaticClass();
+	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnClassFinder(TEXT("/Game/Blueprints/BP_MyCharacter.BP_MyCharacter_C"));
+	DefaultPawnClass = PlayerPawnClassFinder.Class;
 
 	// PlayerController
 	PlayerControllerClass = AZombieShooting_PC::StaticClass();
