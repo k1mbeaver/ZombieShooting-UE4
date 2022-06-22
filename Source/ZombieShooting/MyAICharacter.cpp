@@ -6,6 +6,7 @@
 #include "Components/CapsuleComponent.h"
 #include "GameFrameWork/CharacterMovementComponent.h"
 #include "Animation/AnimInstance.h"
+#include "ZOmbieShooting_AC.h"
 
 // Sets default values
 AMyAICharacter::AMyAICharacter()
@@ -33,6 +34,9 @@ AMyAICharacter::AMyAICharacter()
 	GetCharacterMovement()->MaxWalkSpeed = 500.0f;
 
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("MyAI"));
+
+	AIControllerClass = AZombieShooting_AC::StaticClass();
+	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 }
 
 // Called when the game starts or when spawned
