@@ -44,8 +44,8 @@ public:
 		USoundBase* FireSound;
 
 	/** AnimMontage to play each time we fire */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-		UAnimMontage* FireAnimation;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+	//UAnimMontage* FireAnimation;
 
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
 		USceneComponent* MuzzleLocation;
@@ -54,6 +54,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 		FVector GunOffset;
 
+	UPROPERTY(VisibleInstanceOnly, Category = Animation)
+		class UCharacterAnimInstance* CharacterAnim;
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
+		bool IsAttacking;
 	/*
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
 		float AttackRange;
@@ -83,6 +88,12 @@ private:
 	void LookUp(float NewAxisValue);
 	//UFUNCTION(NetMulticast, Reliable)
 	void Turn(float NewAxisValue);
+
+	void Attack();
+
+	void Run();
+
+	void StopRun();
 
 	void OnFire();
 };

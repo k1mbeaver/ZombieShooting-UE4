@@ -8,6 +8,7 @@
 #include "Components/CapsuleComponent.h"
 #include "GameFrameWork/CharacterMovementComponent.h"
 #include "ZombieShootingProjectile.h"
+#include "CharacterAnimInstance.h"
 #include "Animation/AnimInstance.h"
 
 // Sets default values
@@ -43,21 +44,26 @@ AMyCharacter::AMyCharacter()
 
 	GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
 
-	static ConstructorHelpers::FClassFinder<UAnimInstance> PLAYER_ANIM(TEXT("/Game/BluePrints/Murdock_AnimBlueprint.Murdock_AnimBlueprint_C"));
+	//static ConstructorHelpers::FClassFinder<UAnimInstance> PLAYER_ANIM(TEXT("/Game/BluePrints/Murdock_AnimBlueprint.Murdock_AnimBlueprint_C"));
+	static ConstructorHelpers::FClassFinder<UAnimInstance> PLAYER_ANIM(TEXT("/Game/BluePrints/Character_AnimBlueprint.Character_AnimBlueprint_C"));
 	if (PLAYER_ANIM.Succeeded())
 	{
 		GetMesh()->SetAnimInstanceClass(PLAYER_ANIM.Class);
 	}
 
 	GetCharacterMovement()->JumpZVelocity = 400.0f;
-	GetCharacterMovement()->MaxWalkSpeed = 500.0f;
+	GetCharacterMovement()->MaxWalkSpeed = 200.0f;
 
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("MyCharacter"));
+
+	IsAttacking = false;
 }
 
 void AMyCharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
+
+	CharacterAnim = Cast<UCharacterAnimInstance>(GetMesh()->GetAnimInstance());
 }
 
 
@@ -90,7 +96,11 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
 	// 캐릭터 공격 함수
-	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AMyCharacter::OnFire);
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AMyCharacter::Attack);
+
+	// 캐릭터 달리기 함수
+	PlayerInputComponent->BindAction("Run", IE_Pressed, this, &AMyCharacter::Run);
+	PlayerInputComponent->BindAction("Run", IE_Released, this, &AMyCharacter::StopRun);
 }
 
 void AMyCharacter::UpDown(float NewAxisValue)
@@ -149,8 +159,8 @@ void AMyCharacter::OnFire()
 		UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
 	}
 
-	
 	// try and play a firing animation if specified
+	/*
 	if (FireAnimation != nullptr)
 	{
 		// Get the animation object for the arms mesh
@@ -160,5 +170,27 @@ void AMyCharacter::OnFire()
 			AnimInstance->Montage_Play(FireAnimation, 1.f);
 		}
 	}
-	
+	*/
+}
+
+void AMyCharacter::Attack()
+{
+	// 공격 애니메이션 실행
+	//CharacterAnim->PlayAttackMontage();
+
+	auto AnimInstance = Cast<UCharacterAnimInstance>(GetMesh()->GetAnimInstance());
+	if (nullptr == AnimInstance) return;
+
+	AnimInstance->PlayAttackMontage();
+	OnFire();
+}
+
+void AMyCharacter::Run()
+{
+	GetCharacterMovement()->MaxWalkSpeed *= 2.5f;
+}
+
+void AMyCharacter::StopRun()
+{
+	GetCharacterMovement()->MaxWalkSpeed /= 2.5f;
 }

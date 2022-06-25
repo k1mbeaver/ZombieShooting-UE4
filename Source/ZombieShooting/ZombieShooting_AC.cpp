@@ -11,6 +11,7 @@
 
 const FName AZombieShooting_AC::HomePosKey(TEXT("HomePos"));
 const FName AZombieShooting_AC::PatrolPosKey(TEXT("PatrolPos"));
+const FName AZombieShooting_AC::TargetKey(TEXT("Target"));
 
 AZombieShooting_AC::AZombieShooting_AC(FObjectInitializer const& object_initializer)
 {

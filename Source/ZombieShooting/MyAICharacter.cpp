@@ -6,7 +6,9 @@
 #include "Components/CapsuleComponent.h"
 #include "GameFrameWork/CharacterMovementComponent.h"
 #include "Animation/AnimInstance.h"
-#include "ZOmbieShooting_AC.h"
+#include "AIAnimInstance.h"
+#include "ZombieShooting_AC.h"
+#include "DrawDebugHelpers.h"
 
 // Sets default values
 AMyAICharacter::AMyAICharacter()
@@ -31,12 +33,17 @@ AMyAICharacter::AMyAICharacter()
 	}
 
 	GetCharacterMovement()->JumpZVelocity = 400.0f;
-	GetCharacterMovement()->MaxWalkSpeed = 500.0f;
+	GetCharacterMovement()->MaxWalkSpeed = 200.0f;
 
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("MyAI"));
 
 	AIControllerClass = AZombieShooting_AC::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+
+	AttackRange = 50.0f;
+	AttackRadius = 25.0f;
+	AttackPower = 100.0f;
+	IsAttacking = false;
 }
 
 // Called when the game starts or when spawned
@@ -60,3 +67,75 @@ void AMyAICharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 }
 
+void AMyAICharacter::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+	AIAnim = Cast<UAIAnimInstance>(GetMesh()->GetAnimInstance());
+
+	AIAnim->OnMontageEnded.AddDynamic(this, &AMyAICharacter::OnAttackMontageEnded);
+
+	AIAnim->OnOnCollisonStart_Attack.AddUObject(this, &AMyAICharacter::AttackCheck);
+}
+
+
+void AMyAICharacter::Attack()
+{
+	auto AnimInstance = Cast<UAIAnimInstance>(GetMesh()->GetAnimInstance());
+	if (nullptr == AnimInstance) return;
+
+	AnimInstance->PlayAttackMontage();
+}
+
+void AMyAICharacter::AttackCheck()
+{
+	FHitResult HitResult;
+	FCollisionQueryParams Params(NAME_None, false, this);
+	bool bResult = GetWorld()->SweepSingleByChannel(
+		HitResult,
+		GetActorLocation(),
+		GetActorLocation() + GetActorForwardVector() * AttackRange,
+		FQuat::Identity,
+		ECollisionChannel::ECC_GameTraceChannel2, // Attack 채널 
+		FCollisionShape::MakeSphere(AttackRadius),
+		Params);
+
+#if ENABLE_DRAW_DEBUG
+	FVector TraceVec = GetActorForwardVector() * AttackRange;
+	FVector Center = GetActorLocation() + TraceVec * 0.5f;
+	float HalfHeight = AttackRange * 0.5f + AttackRadius;
+	FQuat CapsuleRot = FRotationMatrix::MakeFromZ(TraceVec).ToQuat();
+	FColor DrawColor = bResult ? FColor::Green : FColor::Red;
+	float DebugLifeTime = 5.0f;
+
+	// 이거는 에디터에서만 사용하는거
+	
+	DrawDebugCapsule(GetWorld(),
+		Center,
+		HalfHeight,
+		AttackRadius,
+		CapsuleRot,
+		DrawColor,
+		false,
+		DebugLifeTime);
+	
+	//GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("PlayerPunch!")); // 플레이어가 펀치하는지 확인용
+
+#endif
+
+
+	if (bResult)
+	{
+		if (HitResult.Actor.IsValid())
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("Hit!"));
+			FDamageEvent DamageEvent;
+			//HitResult.Actor->TakeDamage(AttackPower, DamageEvent, GetController(), this);
+		}
+	}
+}
+
+void AMyAICharacter::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
+{
+	IsAttacking = false;
+	OnAttackEnd.Broadcast();
+}
