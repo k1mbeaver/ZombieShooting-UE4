@@ -4,6 +4,7 @@
 #include "BTDecorator_IsInAttackRange.h"
 #include "ZombieShooting_AC.h"
 #include "MyAICharacter.h"
+#include "MyCharacter.h"
 #include "BehaviorTree/BlackboardComponent.h"
 
 UBTDecorator_IsInAttackRange::UBTDecorator_IsInAttackRange()
@@ -16,13 +17,13 @@ bool UBTDecorator_IsInAttackRange::CalculateRawConditionValue(UBehaviorTreeCompo
     bool bResult = Super::CalculateRawConditionValue(OwnerComp, NodeMemory);
 
     auto ControllingPawn = OwnerComp.GetAIOwner()->GetPawn();
-    if (nullptr == ControllingPawn)
+    if (ControllingPawn == nullptr)
         return false;
 
-    auto Target = Cast<AMyAICharacter>(OwnerComp.GetBlackboardComponent()->GetValueAsObject(AZombieShooting_AC::TargetKey));
-    if (nullptr == Target)
+    auto Target = Cast<AMyCharacter>(OwnerComp.GetBlackboardComponent()->GetValueAsObject(AZombieShooting_AC::TargetKey));
+    if (Target == nullptr)
         return false;
 
-    bResult = (Target->GetDistanceTo(ControllingPawn) <= 200.0f);
+    bResult = (Target->GetDistanceTo(ControllingPawn) <= 400.0f);
     return bResult;
 }

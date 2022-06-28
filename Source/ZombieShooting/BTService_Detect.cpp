@@ -11,7 +11,7 @@
 UBTService_Detect::UBTService_Detect()
 {
     NodeName = TEXT("Detect");
-    Interval = 1.0f;
+    Interval = 0.3f;
 }
 
 void UBTService_Detect::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
@@ -24,7 +24,7 @@ void UBTService_Detect::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeM
 
     UWorld* World = ControllingPawn->GetWorld();
     FVector Center = ControllingPawn->GetActorLocation();
-    float DetectRadius = 600.0f;
+    float DetectRadius = 1000.0f;
 
     if (nullptr == World)
         return;
@@ -39,7 +39,9 @@ void UBTService_Detect::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeM
         {
             AMyCharacter* MyCharacter = Cast<AMyCharacter>(OverlapResult.GetActor());
            //AMyAICharacter* MyAICharacter = Cast<AMyAICharacter>(OverlapResult.GetActor());
-            if (MyCharacter && MyCharacter->GetController()->IsPlayerController())
+
+            //  && MyCharacter->GetController()->IsPlayerController()
+            if (MyCharacter)
             {
                 OwnerComp.GetBlackboardComponent()->SetValueAsObject(AZombieShooting_AC::TargetKey, MyCharacter);
                 DrawDebugSphere(World, Center, DetectRadius, 16, FColor::Green, false, 0.2f);
@@ -47,6 +49,11 @@ void UBTService_Detect::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeM
                 DrawDebugPoint(World, MyCharacter->GetActorLocation(), 10.0f, FColor::Blue, false, 0.2f);
                 DrawDebugLine(World, ControllingPawn->GetActorLocation(), MyCharacter->GetActorLocation(), FColor::Blue, false, 0.2f);
                 return;
+            }
+
+            else
+            {
+                OwnerComp.GetBlackboardComponent()->SetValueAsObject(AZombieShooting_AC::TargetKey, nullptr);
             }
         }
     }

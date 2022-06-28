@@ -5,6 +5,7 @@
 #include "ZombieShootingCharacter.h"
 #include "ZombieShooting_PC.h"
 #include "MyCharacter.h"
+#include "MyAICharacter.h"
 #include "UObject/ConstructorHelpers.h"
 
 AZombieShootingGameMode::AZombieShootingGameMode()

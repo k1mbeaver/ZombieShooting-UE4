@@ -40,8 +40,8 @@ AMyAICharacter::AMyAICharacter()
 	AIControllerClass = AZombieShooting_AC::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 
-	AttackRange = 50.0f;
-	AttackRadius = 25.0f;
+	AttackRange = 250.0f;
+	AttackRadius = 50.0f;
 	AttackPower = 100.0f;
 	IsAttacking = false;
 }
@@ -72,6 +72,7 @@ void AMyAICharacter::PostInitializeComponents()
 	Super::PostInitializeComponents();
 	AIAnim = Cast<UAIAnimInstance>(GetMesh()->GetAnimInstance());
 
+	// 끄기전에 주석 처리후 빌드
 	AIAnim->OnMontageEnded.AddDynamic(this, &AMyAICharacter::OnAttackMontageEnded);
 
 	AIAnim->OnOnCollisonStart_Attack.AddUObject(this, &AMyAICharacter::AttackCheck);

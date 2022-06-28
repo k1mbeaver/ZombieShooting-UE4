@@ -16,7 +16,7 @@ EBTNodeResult::Type UBTTask_Attack::ExecuteTask(UBehaviorTreeComponent& OwnerCom
     EBTNodeResult::Type Result = Super::ExecuteTask(OwnerComp, NodeMemory);
 
     auto MyAICharacter = Cast<AMyAICharacter>(OwnerComp.GetAIOwner()->GetPawn());
-    if (nullptr == MyAICharacter)
+    if (MyAICharacter == nullptr)
         return EBTNodeResult::Failed;
 
     MyAICharacter->Attack();
