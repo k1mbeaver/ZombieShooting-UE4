@@ -18,12 +18,16 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	virtual void PostInitializeComponents() override;
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	//UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = AI)
-	//class AMyAICharacter* DefaultAI;
+	//UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = AI, Meta = (AllowPrivateAccess = true))
+		//int nHowManyAI;
+
+	UFUNCTION(BlueprintCallable)
+		int GetPlayerStageAI();
 
 };

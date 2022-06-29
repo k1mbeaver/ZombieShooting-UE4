@@ -8,6 +8,7 @@
 #include "Animation/AnimInstance.h"
 #include "AIAnimInstance.h"
 #include "ZombieShooting_AC.h"
+#include "MyCharacter.h"
 #include "DrawDebugHelpers.h"
 
 // Sets default values
@@ -42,7 +43,7 @@ AMyAICharacter::AMyAICharacter()
 
 	AttackRange = 250.0f;
 	AttackRadius = 50.0f;
-	AttackPower = 100.0f;
+	AttackPower = 10.0f;
 	IsAttacking = false;
 }
 
@@ -96,7 +97,7 @@ void AMyAICharacter::AttackCheck()
 		GetActorLocation(),
 		GetActorLocation() + GetActorForwardVector() * AttackRange,
 		FQuat::Identity,
-		ECollisionChannel::ECC_GameTraceChannel2, // Attack 채널 
+		ECollisionChannel::ECC_GameTraceChannel3, // Attack 채널 player의 경우에만 충돌 한다
 		FCollisionShape::MakeSphere(AttackRadius),
 		Params);
 
@@ -130,7 +131,8 @@ void AMyAICharacter::AttackCheck()
 		{
 			GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("Hit!"));
 			FDamageEvent DamageEvent;
-			//HitResult.Actor->TakeDamage(AttackPower, DamageEvent, GetController(), this);
+			AMyCharacter* HitCharacter = Cast<AMyCharacter>(HitResult.Actor);
+			HitCharacter->TakeDamage(AttackPower, DamageEvent, GetController(), this);
 		}
 	}
 }

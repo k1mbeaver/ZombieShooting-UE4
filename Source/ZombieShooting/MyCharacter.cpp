@@ -57,6 +57,8 @@ AMyCharacter::AMyCharacter()
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("MyCharacter"));
 
 	IsAttacking = false;
+
+	fPlayerHp = 100.0f;
 }
 
 void AMyCharacter::PostInitializeComponents()
@@ -193,4 +195,22 @@ void AMyCharacter::Run()
 void AMyCharacter::StopRun()
 {
 	GetCharacterMovement()->MaxWalkSpeed /= 2.5f;
+}
+
+float AMyCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	float FinalDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+
+
+	fPlayerHp -= FinalDamage;
+	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("Attack!"));
+
+	if (fPlayerHp == 0) // 피가 다 까이면
+	{
+		CharacterAnim->SetDeadAnim();
+	}
+
+	//MyTakeDamage.Broadcast();
+	return FinalDamage;
+
 }

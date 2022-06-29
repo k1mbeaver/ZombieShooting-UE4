@@ -24,6 +24,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	virtual void PostInitializeComponents() override;
+	float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamasgeCauser) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -42,6 +43,9 @@ public:
 	/** Sound to play each time we fire */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 		USoundBase* FireSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = HP)
+		float fPlayerHp;
 
 	/** AnimMontage to play each time we fire */
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
@@ -80,13 +84,12 @@ public:
 		//class UABAnimInstance* ABAnim;
 
 private:
-	//UFUNCTION(NetMulticast, Reliable)
 	void UpDown(float NewAxisValue);
-	//UFUNCTION(NetMulticast, Reliable)
+
 	void LeftRight(float NewAxisValue);
-	//UFUNCTION(NetMulticast, Reliable)
+
 	void LookUp(float NewAxisValue);
-	//UFUNCTION(NetMulticast, Reliable)
+
 	void Turn(float NewAxisValue);
 
 	void Attack();
