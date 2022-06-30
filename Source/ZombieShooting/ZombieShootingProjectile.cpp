@@ -3,6 +3,7 @@
 #include "ZombieShootingProjectile.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
+#include "MyAICharacter.h"
 
 AZombieShootingProjectile::AZombieShootingProjectile() 
 {
@@ -22,18 +23,28 @@ AZombieShootingProjectile::AZombieShootingProjectile()
 	// Use a ProjectileMovementComponent to govern this projectile's movement
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileComp"));
 	ProjectileMovement->UpdatedComponent = CollisionComp;
-	ProjectileMovement->InitialSpeed = 3000.f;
-	ProjectileMovement->MaxSpeed = 3000.f;
+	ProjectileMovement->InitialSpeed = 3000.0f;
+	ProjectileMovement->MaxSpeed = 3000.0f;
 	ProjectileMovement->bRotationFollowsVelocity = true;
 	ProjectileMovement->bShouldBounce = true;
 
 	// Die after 3 seconds by default
 	InitialLifeSpan = 3.0f;
+
+	AttackPower = 100.0f;
 }
 
 void AZombieShootingProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	// Only add impulse and destroy projectile if we hit a physics
+
+	if (Cast<AMyAICharacter>(Hit.Actor)) // 맞은 대상이 몬스터일 때
+	{
+		AMyAICharacter* HitCharacter = Cast<AMyAICharacter>(Hit.Actor);
+
+		HitCharacter->AttackByPlayer(AttackPower);
+	}
+	
 	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr) && OtherComp->IsSimulatingPhysics())
 	{
 		OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());

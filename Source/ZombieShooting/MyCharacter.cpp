@@ -98,7 +98,7 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
 	// 캐릭터 공격 함수
-	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AMyCharacter::Attack);
+	PlayerInputComponent->BindAction(TEXT("Fire"), IE_Pressed, this, &AMyCharacter::OnFire);
 
 	// 캐릭터 달리기 함수
 	PlayerInputComponent->BindAction("Run", IE_Pressed, this, &AMyCharacter::Run);
@@ -134,6 +134,11 @@ void AMyCharacter::Turn(float NewAxisValue)
 
 void AMyCharacter::OnFire()
 {
+	auto AnimInstance = Cast<UCharacterAnimInstance>(GetMesh()->GetAnimInstance());
+	if (nullptr == AnimInstance) return;
+
+	AnimInstance->PlayAttackMontage();
+
 	// try and fire a projectile
 	if (ProjectileClass != nullptr)
 	{

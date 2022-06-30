@@ -10,6 +10,7 @@
 #include "ZombieShooting_AC.h"
 #include "MyCharacter.h"
 #include "DrawDebugHelpers.h"
+#include "MyGameInstance.h"
 
 // Sets default values
 AMyAICharacter::AMyAICharacter()
@@ -43,7 +44,6 @@ AMyAICharacter::AMyAICharacter()
 
 	AttackRange = 250.0f;
 	AttackRadius = 50.0f;
-	AttackPower = 10.0f;
 	IsAttacking = false;
 }
 
@@ -51,7 +51,11 @@ AMyAICharacter::AMyAICharacter()
 void AMyAICharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	UMyGameInstance* MyGI = GetGameInstance<UMyGameInstance>();
+
+	fAIHp = MyGI->GetMonsterHp("GeneralMonster");
+	AttackPower = MyGI->GetMonsterAttackDamage("GeneralMonster");
 }
 
 // Called every frame
@@ -74,11 +78,11 @@ void AMyAICharacter::PostInitializeComponents()
 	AIAnim = Cast<UAIAnimInstance>(GetMesh()->GetAnimInstance());
 
 	// 끄기전에 주석 처리후 빌드
-	AIAnim->OnMontageEnded.AddDynamic(this, &AMyAICharacter::OnAttackMontageEnded);
+	//AIAnim->OnMontageEnded.AddDynamic(this, &AMyAICharacter::OnAttackMontageEnded);
 
-	AIAnim->OnOnCollisonStart_Attack.AddUObject(this, &AMyAICharacter::AttackCheck);
+	//AIAnim->OnOnCollisonStart_Attack.AddUObject(this, &AMyAICharacter::AttackCheck);
 }
-
+	
 
 void AMyAICharacter::Attack()
 {
@@ -137,8 +141,28 @@ void AMyAICharacter::AttackCheck()
 	}
 }
 
+void AMyAICharacter::AttackByPlayer(float DamageAmount)
+{
+	fAIHp -= DamageAmount;
+	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("AIHit!"));
+
+	if (fAIHp == 0) // 피가 다 까이면
+	{
+		AIAnim->SetDeadAnim();
+		StopAIController();
+	}
+
+}
+
 void AMyAICharacter::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
 {
 	IsAttacking = false;
 	OnAttackEnd.Broadcast();
+}
+
+void AMyAICharacter::StopAIController()
+{
+	AZombieShooting_AC* AIController = Cast<AZombieShooting_AC>(GetController());
+
+	AIController->StopAI();
 }

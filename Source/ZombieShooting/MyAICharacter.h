@@ -32,6 +32,9 @@ public:
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
 		bool IsAttacking;
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = HP, Meta = (AllowPrivateAccess = true))
+		float fAIHp;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -52,5 +55,7 @@ public:
 	void AttackCheck();
 	FOnAttackEndDelegate OnAttackEnd; //델리게이트 변수 선언
 	void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
+	void AttackByPlayer(float DamageAmount);
+	void StopAIController();
 
 };

@@ -118,10 +118,10 @@ FString UMyGameInstance::GetMonsterName(FString MonsterType)
 	return MonsterName;
 }
 
-int UMyGameInstance::GetMonsterHp(FString MonsterType)
+float UMyGameInstance::GetMonsterHp(FString MonsterType)
 {
 	FMonsterDataTable* MonsterData = FMonsterTable->FindRow<FMonsterDataTable>(*MonsterType, TEXT(""));
-	int MonsterHp = MonsterData->MonsterHp;
+	float MonsterHp = MonsterData->MonsterHp;
 	return MonsterHp;
 }
 

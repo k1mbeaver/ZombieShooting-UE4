@@ -32,7 +32,7 @@ public:
 	// 몬스터 데이터값 얻어오기
 
 	FString GetMonsterName(FString MonsterType);
-	int GetMonsterHp(FString MonsterType);
+	float GetMonsterHp(FString MonsterType);
 	float GetMonsterSpeed(FString MonsterType);
 	float GetMonsterAttackDamage(FString MonsterType);
 	float GetMonsterAttackSpeed(FString MonsterType);
