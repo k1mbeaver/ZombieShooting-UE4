@@ -78,9 +78,9 @@ void AMyAICharacter::PostInitializeComponents()
 	AIAnim = Cast<UAIAnimInstance>(GetMesh()->GetAnimInstance());
 
 	// 끄기전에 주석 처리후 빌드
-	//AIAnim->OnMontageEnded.AddDynamic(this, &AMyAICharacter::OnAttackMontageEnded);
+	AIAnim->OnMontageEnded.AddDynamic(this, &AMyAICharacter::OnAttackMontageEnded);
 
-	//AIAnim->OnOnCollisonStart_Attack.AddUObject(this, &AMyAICharacter::AttackCheck);
+	AIAnim->OnOnCollisonStart_Attack.AddUObject(this, &AMyAICharacter::AttackCheck);
 }
 	
 

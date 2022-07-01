@@ -98,7 +98,7 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
 	// 캐릭터 공격 함수
-	PlayerInputComponent->BindAction(TEXT("Fire"), IE_Pressed, this, &AMyCharacter::OnFire);
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AMyCharacter::OnFire);
 
 	// 캐릭터 달리기 함수
 	PlayerInputComponent->BindAction("Run", IE_Pressed, this, &AMyCharacter::Run);
