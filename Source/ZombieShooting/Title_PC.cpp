@@ -42,7 +42,8 @@ void ATitle_PC::PlayGame()
 	MyGI->SetPlayerDataDefault();
 	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, MyGI->GetPlayerGun());
 	// 그거에 맞는 레벨을 실행한다. (이거도 GameInstance 값 따라서 OpenLevel 하도록 설정하자)
-	UGameplayStatics::OpenLevel(GetWorld(), FName("FirstPersonExampleMap"));
+	//UGameplayStatics::OpenLevel(GetWorld(), FName("FirstPersonExampleMap"));
+	UGameplayStatics::OpenLevel(GetWorld(), FName("ConceptMap"));
 }
 
 void ATitle_PC::ReplayGame()
@@ -51,7 +52,8 @@ void ATitle_PC::ReplayGame()
 	UMyGameInstance* MyGI = GetGameInstance<UMyGameInstance>();
 	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, MyGI->GetPlayerGun());
 	// 그거에 맞는 레벨을 실행한다. (이거도 GameInstance 값 따라서 OpenLevel 하도록 설정하자)
-	UGameplayStatics::OpenLevel(GetWorld(), FName("FirstPersonExampleMap"));
+	//UGameplayStatics::OpenLevel(GetWorld(), FName("FirstPersonExampleMap"));
+	UGameplayStatics::OpenLevel(GetWorld(), FName("ConceptMap"));
 }
 
 void ATitle_PC::SettingGame()
