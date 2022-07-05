@@ -37,6 +37,9 @@ public:
 	float GetMonsterAttackDamage(FString MonsterType);
 	float GetMonsterAttackSpeed(FString MonsterType);
 
+	UPROPERTY()
+		int nMonsterDeath;
+
 	// Json 관련 (현재는 미사용)
 	//void JsonSave();
 	//void JsonLoad();

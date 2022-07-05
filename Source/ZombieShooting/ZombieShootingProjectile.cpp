@@ -31,7 +31,7 @@ AZombieShootingProjectile::AZombieShootingProjectile()
 	// Die after 3 seconds by default
 	InitialLifeSpan = 3.0f;
 
-	AttackPower = 100.0f;
+	AttackPower = 20.0f;
 }
 
 void AZombieShootingProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
@@ -43,11 +43,13 @@ void AZombieShootingProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* Othe
 		AMyAICharacter* HitCharacter = Cast<AMyAICharacter>(Hit.Actor);
 
 		HitCharacter->AttackByPlayer(AttackPower);
+
+		Destroy();
 	}
 	
 	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr) && OtherComp->IsSimulatingPhysics())
 	{
-		OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
+		//OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
 
 		Destroy();
 	}

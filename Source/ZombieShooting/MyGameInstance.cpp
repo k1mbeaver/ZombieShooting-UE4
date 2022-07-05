@@ -21,6 +21,8 @@ UMyGameInstance::UMyGameInstance()
 	{
 		FMonsterTable = DT_ABMONSTER.Object;
 	}
+	
+	nMonsterDeath = 0;
 }
 
 /*

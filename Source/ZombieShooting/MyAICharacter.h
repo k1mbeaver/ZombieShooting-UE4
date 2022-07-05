@@ -35,6 +35,8 @@ public:
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = HP, Meta = (AllowPrivateAccess = true))
 		float fAIHp;
+
+	int nMonsterCount;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

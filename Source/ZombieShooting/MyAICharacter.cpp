@@ -54,6 +54,7 @@ void AMyAICharacter::BeginPlay()
 
 	UMyGameInstance* MyGI = GetGameInstance<UMyGameInstance>();
 
+	nMonsterCount = MyGI->GetPlayerStage();
 	fAIHp = MyGI->GetMonsterHp("GeneralMonster");
 	AttackPower = MyGI->GetMonsterAttackDamage("GeneralMonster");
 }
@@ -146,10 +147,19 @@ void AMyAICharacter::AttackByPlayer(float DamageAmount)
 	fAIHp -= DamageAmount;
 	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("AIHit!"));
 
+	UMyGameInstance* MyGI = GetGameInstance<UMyGameInstance>();
+
 	if (fAIHp == 0) // 피가 다 까이면
 	{
 		AIAnim->SetDeadAnim();
 		StopAIController();
+
+		MyGI->nMonsterDeath++;
+	}
+
+	if (MyGI->nMonsterDeath == nMonsterCount)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("GameEnd!"));
 	}
 
 }

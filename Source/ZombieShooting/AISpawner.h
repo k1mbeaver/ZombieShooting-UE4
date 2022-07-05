@@ -30,4 +30,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 		int GetPlayerStageAI();
 
+	UPROPERTY(VisibleAnywhere, Category = Monster)
+		int nMonsterDeath;
+
 };
