@@ -98,6 +98,13 @@ int UMyGameInstance::GetPlayerStage()
 	return PlayerStage;
 }
 
+void UMyGameInstance::SetPlayerStage()
+{
+	FPlayerDataTable* PlayerData = FPlayerTable->FindRow<FPlayerDataTable>("PlayerInfo", TEXT(""));
+	PlayerData->PlayerStage++;
+	nMonsterDeath = 0;
+}
+
 float UMyGameInstance::GetPlayerBgmPower()
 {
 	FPlayerDataTable* PlayerData = FPlayerTable->FindRow<FPlayerDataTable>("PlayerInfo", TEXT(""));

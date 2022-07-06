@@ -54,11 +54,18 @@ AMyCharacter::AMyCharacter()
 	GetCharacterMovement()->JumpZVelocity = 400.0f;
 	GetCharacterMovement()->MaxWalkSpeed = 200.0f;
 
+	// 캐릭터가 자연스럽게 회전하게 
+	GetCharacterMovement()->bOrientRotationToMovement = true;
+	GetCharacterMovement()->RotationRate = FRotator(0.0f, 720.0f, 0.0f);
+	GetCharacterMovement()->GetNavAgentPropertiesRef().bCanCrouch = true;
+
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("MyCharacter"));
 
 	IsAttacking = false;
 
 	fPlayerHp = 100.0f;
+
+	myGun = EGunState::BASIC;
 }
 
 void AMyCharacter::PostInitializeComponents()
@@ -103,6 +110,10 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	// 캐릭터 달리기 함수
 	PlayerInputComponent->BindAction("Run", IE_Pressed, this, &AMyCharacter::Run);
 	PlayerInputComponent->BindAction("Run", IE_Released, this, &AMyCharacter::StopRun);
+
+	// 캐릭터 견착 함수
+	PlayerInputComponent->BindAction("ReadyFire", IE_Pressed, this, &AMyCharacter::ReadyFire);
+	PlayerInputComponent->BindAction("ReadyFire", IE_Released, this, &AMyCharacter::ResetReadyFire);
 }
 
 void AMyCharacter::UpDown(float NewAxisValue)
@@ -132,6 +143,16 @@ void AMyCharacter::Turn(float NewAxisValue)
 	AddControllerYawInput(NewAxisValue);
 }
 
+void AMyCharacter::ReadyFire()
+{
+	Camera->SetRelativeLocation(FVector(450.0f, 0.0f, 30.0f));
+}
+
+void AMyCharacter::ResetReadyFire()
+{
+	Camera->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
+}
+
 void AMyCharacter::OnFire()
 {
 	auto AnimInstance = Cast<UCharacterAnimInstance>(GetMesh()->GetAnimInstance());
@@ -139,31 +160,79 @@ void AMyCharacter::OnFire()
 
 	AnimInstance->PlayAttackMontage();
 
-	// try and fire a projectile
-	if (ProjectileClass != nullptr)
+	AZombieShootingProjectile* myTile = Cast<AZombieShootingProjectile>(ProjectileClass);
+
+	switch (myGun)
 	{
-		UWorld* const World = GetWorld();
-		if (World != nullptr)
+		// 일반 총의 경우
+	case EGunState::BASIC:
+		// try and fire a projectile
+		if (ProjectileClass != nullptr)
 		{
-			const FRotator SpawnRotation = GetControlRotation();
-			// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
-			const FVector SpawnLocation = ((MuzzleLocation != nullptr) ? MuzzleLocation->GetComponentLocation() : GetActorLocation());
+			UWorld* const World = GetWorld();
+			if (World != nullptr)
+			{
+				const FRotator SpawnRotation = GetControlRotation();
+				// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
+				const FVector SpawnLocation = ((MuzzleLocation != nullptr) ? MuzzleLocation->GetComponentLocation() : GetActorLocation());
 
 
-			// + SpawnRotation.RotateVector(GunOffset)
-			//Set Spawn Collision Handling Override
-			FActorSpawnParameters ActorSpawnParams;
-			ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+				// + SpawnRotation.RotateVector(GunOffset)
+				//Set Spawn Collision Handling Override
+				FActorSpawnParameters ActorSpawnParams;
+				ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 
-			// spawn the projectile at the muzzle
-			World->SpawnActor<AZombieShootingProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+				// spawn the projectile at the muzzle
+				World->SpawnActor<AZombieShootingProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+			}
 		}
-	}
 
-	// try and play the sound if specified
-	if (FireSound != nullptr)
-	{
-		UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
+		// try and play the sound if specified
+		if (FireSound != nullptr)
+		{
+			UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
+		}
+
+		break;
+
+		// HEAVY의 경우
+	case EGunState::HEAVYBASIC:
+
+		// 총알의 속성을 HEAVY로 바꾼다.
+		//myTile->myGun = EGunState::HEAVYBASIC;
+
+		// try and fire a projectile
+		if (ProjectileClass != nullptr)
+		{
+			UWorld* const World = GetWorld();
+			if (World != nullptr)
+			{
+				const FRotator SpawnRotation = GetControlRotation();
+				// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
+				const FVector SpawnLocation = ((MuzzleLocation != nullptr) ? MuzzleLocation->GetComponentLocation() : GetActorLocation());
+
+
+				// + SpawnRotation.RotateVector(GunOffset)
+				//Set Spawn Collision Handling Override
+				FActorSpawnParameters ActorSpawnParams;
+				ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+
+				// spawn the projectile at the muzzle
+				World->SpawnActor<AZombieShootingProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+			}
+		}
+
+		// try and play the sound if specified
+		if (FireSound != nullptr)
+		{
+			UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
+		}
+
+		break;
+		
+		// 샷건의 경우
+	case EGunState::SHOTGUN:
+		break;
 	}
 
 	// try and play a firing animation if specified

@@ -36,5 +36,8 @@ public:
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
 		float AttackPower;
+
+	//UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly)
+		//EGunState myGun;
 };
 

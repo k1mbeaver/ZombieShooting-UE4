@@ -6,6 +6,8 @@
 #include "ZombieShooting_PC.h"
 #include "MyCharacter.h"
 #include "MyAICharacter.h"
+#include "NavigationSystem.h"
+#include "MyGameInstance.h"
 #include "UObject/ConstructorHelpers.h"
 
 AZombieShootingGameMode::AZombieShootingGameMode()
@@ -28,5 +30,12 @@ void AZombieShootingGameMode::PostLogin(APlayerController* NewPlayer)
 	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, TEXT("PostLogin Begin"));
 	Super::PostLogin(NewPlayer);
 	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, TEXT("PostLogin End"));
+
+}
+
+void AZombieShootingGameMode::StartPlay()
+{
+	Super::StartPlay();
+
 
 }

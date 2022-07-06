@@ -5,12 +5,14 @@
 #include "NavigationSystem.h"
 #include "MyAICharacter.h"
 #include "MyGameInstance.h"
+#include <random>
 
 // Sets default values
 AAISpawner::AAISpawner()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	
 	/*
 	static ConstructorHelpers::FObjectFinder<AMyAICharacter> AI_CHARACTER(TEXT("Blueprint'/Game/BluePrints/BP_MyAICharacter.BP_MyAICharacter'"));
 	if (AI_CHARACTER.Succeeded())
@@ -42,7 +44,7 @@ void AAISpawner::BeginPlay()
 		FNavLocation SpawnLocation;
 		NavSystem->GetRandomPointInNavigableRadius(FVector::ZeroVector, 4000.0f, SpawnLocation);
 
-		GetWorld()->SpawnActor<AMyAICharacter>(AMyAICharacter::StaticClass(), SpawnLocation.Location, FName("None");
+		(AMyAICharacter*)GetWorld()->SpawnActor(DefaultAI, SpawnLocation.Location, FName("Monster"));
 	}
 	*/
 }
@@ -60,5 +62,22 @@ int AAISpawner::GetPlayerStageAI()
 	int nHowManyAI = MyGI->GetPlayerStage();
 
 	return nHowManyAI;
+}
+
+int AAISpawner::RandomTransform(int min, int max)
+{
+	std::random_device rd;
+	std::mt19937_64 rEngine(rd());
+	std::uniform_int_distribution<>dist(min, max);
+	return static_cast<int>(dist(rEngine));
+}
+
+FVector AAISpawner::GiveFVector()
+{
+	int nDestinationX, nDestinationY;
+	nDestinationX = RandomTransform(-1770, 1100);
+	nDestinationY = RandomTransform(-3300, 730);
+
+	return FVector(nDestinationX, nDestinationY, 155);
 }
 

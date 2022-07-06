@@ -37,6 +37,11 @@ AMyAICharacter::AMyAICharacter()
 	GetCharacterMovement()->JumpZVelocity = 400.0f;
 	GetCharacterMovement()->MaxWalkSpeed = 200.0f;
 
+	// 캐릭터가 자연스럽게 회전하게 
+	GetCharacterMovement()->bOrientRotationToMovement = true;
+	GetCharacterMovement()->RotationRate = FRotator(0.0f, 720.0f, 0.0f);
+	GetCharacterMovement()->GetNavAgentPropertiesRef().bCanCrouch = true;
+
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("MyAI"));
 
 	AIControllerClass = AZombieShooting_AC::StaticClass();
@@ -151,15 +156,21 @@ void AMyAICharacter::AttackByPlayer(float DamageAmount)
 
 	if (fAIHp == 0) // 피가 다 까이면
 	{
+		// 사망 애니메이션 출력
 		AIAnim->SetDeadAnim();
+		
+		// 비헤이비어 트리 멈춤
 		StopAIController();
 
+		// 게임 인스턴스의 몬스터 사망값 증가
 		MyGI->nMonsterDeath++;
 	}
 
 	if (MyGI->nMonsterDeath == nMonsterCount)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("GameEnd!"));
+		MyGI->SetPlayerStage();
+		UGameplayStatics::OpenLevel(GetWorld(), FName("ConceptMap"));
 	}
 
 }

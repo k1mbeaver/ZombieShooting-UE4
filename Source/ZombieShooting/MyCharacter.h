@@ -7,6 +7,15 @@
 #include "GameFramework/Character.h"
 #include "MyCharacter.generated.h"
 
+UENUM(BlueprintType)
+enum class EGunState : uint8
+{
+	SHOTGUN, // 3발 나감
+	BASIC, // 일반
+	HEAVYBASIC, // 일반보다 딜이 더 썜
+};
+
+
 UCLASS()
 class ZOMBIESHOOTING_API AMyCharacter : public ACharacter
 {
@@ -63,6 +72,9 @@ public:
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
 		bool IsAttacking;
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly)
+		EGunState myGun;
 	/*
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
 		float AttackRange;
@@ -99,4 +111,8 @@ private:
 	void StopRun();
 
 	void OnFire();
+
+	void ReadyFire();
+
+	void ResetReadyFire();
 };

@@ -30,7 +30,16 @@ public:
 	UFUNCTION(BlueprintCallable)
 		int GetPlayerStageAI();
 
+	UFUNCTION(BlueprintCallable)
+		int RandomTransform(int min, int max);
+
+	UFUNCTION(BlueprintCallable)
+		FVector GiveFVector();
+
 	UPROPERTY(VisibleAnywhere, Category = Monster)
 		int nMonsterDeath;
+
+	//UPROPERTY(VisibleAnywhere, Category = Monster)
+		//class AMyAICharacter* DefaultAI;
 
 };

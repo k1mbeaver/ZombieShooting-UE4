@@ -28,6 +28,7 @@ public:
 	float GetPlayerBgmPower();
 	void SetPlayerBgmPower(float fBgmPower);
 	void SetPlayerDataDefault();
+	void SetPlayerStage();
 
 	// 몬스터 데이터값 얻어오기
 
