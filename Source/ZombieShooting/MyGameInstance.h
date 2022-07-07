@@ -29,6 +29,7 @@ public:
 	void SetPlayerBgmPower(float fBgmPower);
 	void SetPlayerDataDefault();
 	void SetPlayerStage();
+	void SetPlayerGun(FString yourGun);
 
 	// 몬스터 데이터값 얻어오기
 

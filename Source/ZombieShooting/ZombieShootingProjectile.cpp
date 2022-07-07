@@ -4,7 +4,7 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
 #include "MyAICharacter.h"
-#include "MyCharacter.h"
+#include "MyGameInstance.h"
 
 AZombieShootingProjectile::AZombieShootingProjectile() 
 {
@@ -34,32 +34,48 @@ AZombieShootingProjectile::AZombieShootingProjectile()
 
 	// BASIC
 	AttackPower = 20.0f;
-
-	//myGun = EGunState::BASIC;
 }
 
 void AZombieShootingProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	// Only add impulse and destroy projectile if we hit a physics
+	UMyGameInstance* MyGI = GetGameInstance<UMyGameInstance>();
+	FString GunName = MyGI->GetPlayerGun();
+
+	if (GunName == TEXT("HEAVYBASIC"))
+	{
+		AttackPower = 100.0f;
+	}
+
+	else if (GunName == TEXT("SHOTGUN"))
+	{
+		AttackPower = 50.0f;
+	}
+
+	else
+	{
+		AttackPower = 20.0f;
+	}
 
 	if (Cast<AMyAICharacter>(Hit.Actor)) // 맞은 대상이 몬스터일 때
 	{
 		AMyAICharacter* HitCharacter = Cast<AMyAICharacter>(Hit.Actor);
 		
-		//if (myGun == EGunState::HEAVYBASIC)
-		//{
-		//	AttackPower = 50.0f;
-		//}
-
 		HitCharacter->AttackByPlayer(AttackPower);
 
 		Destroy();
 	}
-	
+
+	else
+	{
+		Destroy();
+	}
+	/*
 	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr) && OtherComp->IsSimulatingPhysics())
 	{
 		//OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
 
 		Destroy();
 	}
+	*/
 }

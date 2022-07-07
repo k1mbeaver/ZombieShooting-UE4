@@ -10,6 +10,7 @@
 #include "ZombieShootingProjectile.h"
 #include "CharacterAnimInstance.h"
 #include "Animation/AnimInstance.h"
+#include "MyGameInstance.h"
 
 // Sets default values
 AMyCharacter::AMyCharacter()
@@ -32,7 +33,28 @@ AMyCharacter::AMyCharacter()
 
 	MuzzleLocation = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzleLocation"));
 	MuzzleLocation->SetupAttachment(GetCapsuleComponent());
-	MuzzleLocation->SetRelativeLocation(FVector(80.0f, 8.0f, 40.0f));
+	MuzzleLocation->SetRelativeLocation(FVector(100.0f, 15.0f, 40.0f));
+
+	
+	ShotgunMuzzleLocationOne = CreateDefaultSubobject<USceneComponent>(TEXT("ShotgunMuzzleLocationOne"));
+	ShotgunMuzzleLocationOne->SetupAttachment(GetCapsuleComponent());
+	ShotgunMuzzleLocationOne->SetRelativeLocationAndRotation(FVector(100.0f, -45.0f, 40.0f), FRotator(0.0f, 0.0f, 0.0f));
+
+	ShotgunMuzzleLocationTwo = CreateDefaultSubobject<USceneComponent>(TEXT("ShotgunMuzzleLocationTwo"));
+	ShotgunMuzzleLocationTwo->SetupAttachment(GetCapsuleComponent());
+	ShotgunMuzzleLocationTwo->SetRelativeLocationAndRotation(FVector(100.0f, -15.0f, 40.0f), FRotator(0.0f, 0.0f, 0.0f));
+
+	ShotgunMuzzleLocationThree = CreateDefaultSubobject<USceneComponent>(TEXT("ShotgunMuzzleLocationThree"));
+	ShotgunMuzzleLocationThree->SetupAttachment(GetCapsuleComponent());
+	ShotgunMuzzleLocationThree->SetRelativeLocationAndRotation(FVector(100.0f, 15.0f, 40.0f), FRotator(0.0f, 0.0f, 0.0f));
+
+	ShotgunMuzzleLocationFour = CreateDefaultSubobject<USceneComponent>(TEXT("ShotgunMuzzleLocationFour"));
+	ShotgunMuzzleLocationFour->SetupAttachment(GetCapsuleComponent());
+	ShotgunMuzzleLocationFour->SetRelativeLocationAndRotation(FVector(100.0f, 45.0f, 40.0f), FRotator(0.0f, 0.0f, 0.0f));
+
+	ShotgunMuzzleLocationFive = CreateDefaultSubobject<USceneComponent>(TEXT("ShotgunMuzzleLocationFive"));
+	ShotgunMuzzleLocationFive->SetupAttachment(GetCapsuleComponent());
+	ShotgunMuzzleLocationFive->SetRelativeLocationAndRotation(FVector(100.0f, 75.0f, 40.0f), FRotator(0.0f, 0.0f, 0.0f));
 
 	GunOffset = FVector(100.0f, 0.0f, 10.0f);
 
@@ -65,7 +87,7 @@ AMyCharacter::AMyCharacter()
 
 	fPlayerHp = 100.0f;
 
-	myGun = EGunState::BASIC;
+	//myGun = EGunState::BASIC;
 }
 
 void AMyCharacter::PostInitializeComponents()
@@ -81,6 +103,7 @@ void AMyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	StartSettingGun();
 }
 
 // Called every frame
@@ -160,22 +183,34 @@ void AMyCharacter::OnFire()
 
 	AnimInstance->PlayAttackMontage();
 
-	AZombieShootingProjectile* myTile = Cast<AZombieShootingProjectile>(ProjectileClass);
-
-	switch (myGun)
+	if (myGun == EGunState::SHOTGUN)
 	{
-		// 일반 총의 경우
-	case EGunState::BASIC:
 		// try and fire a projectile
 		if (ProjectileClass != nullptr)
 		{
 			UWorld* const World = GetWorld();
+
 			if (World != nullptr)
 			{
-				const FRotator SpawnRotation = GetControlRotation();
+				const FRotator SpawnRotationOne = GetControlRotation();
 				// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
-				const FVector SpawnLocation = ((MuzzleLocation != nullptr) ? MuzzleLocation->GetComponentLocation() : GetActorLocation());
+				const FVector SpawnLocationOne = ((ShotgunMuzzleLocationOne != nullptr) ? ShotgunMuzzleLocationOne->GetComponentLocation() : GetActorLocation());
 
+				const FRotator SpawnRotationTwo = GetControlRotation();
+				// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
+				const FVector SpawnLocationTwo = ((ShotgunMuzzleLocationTwo != nullptr) ? ShotgunMuzzleLocationTwo->GetComponentLocation() : GetActorLocation());
+
+				const FRotator SpawnRotationThree = GetControlRotation();
+				// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
+				const FVector SpawnLocationThree = ((ShotgunMuzzleLocationThree != nullptr) ? ShotgunMuzzleLocationThree->GetComponentLocation() : GetActorLocation());
+
+				const FRotator SpawnRotationFour = GetControlRotation();
+				// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
+				const FVector SpawnLocationFour = ((ShotgunMuzzleLocationFour != nullptr) ? ShotgunMuzzleLocationFour->GetComponentLocation() : GetActorLocation());
+
+				const FRotator SpawnRotationFive = GetControlRotation();
+				// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
+				const FVector SpawnLocationFive = ((ShotgunMuzzleLocationFive != nullptr) ? ShotgunMuzzleLocationFive->GetComponentLocation() : GetActorLocation());
 
 				// + SpawnRotation.RotateVector(GunOffset)
 				//Set Spawn Collision Handling Override
@@ -183,7 +218,11 @@ void AMyCharacter::OnFire()
 				ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 
 				// spawn the projectile at the muzzle
-				World->SpawnActor<AZombieShootingProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+				World->SpawnActor<AZombieShootingProjectile>(ProjectileClass, SpawnLocationOne, SpawnRotationOne, ActorSpawnParams);
+				World->SpawnActor<AZombieShootingProjectile>(ProjectileClass, SpawnLocationTwo, SpawnRotationTwo, ActorSpawnParams);
+				World->SpawnActor<AZombieShootingProjectile>(ProjectileClass, SpawnLocationThree, SpawnRotationThree, ActorSpawnParams);
+				World->SpawnActor<AZombieShootingProjectile>(ProjectileClass, SpawnLocationFour, SpawnRotationFour, ActorSpawnParams);
+				World->SpawnActor<AZombieShootingProjectile>(ProjectileClass, SpawnLocationFive, SpawnRotationFive, ActorSpawnParams);
 			}
 		}
 
@@ -192,48 +231,40 @@ void AMyCharacter::OnFire()
 		{
 			UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
 		}
-
-		break;
-
-		// HEAVY의 경우
-	case EGunState::HEAVYBASIC:
-
-		// 총알의 속성을 HEAVY로 바꾼다.
-		//myTile->myGun = EGunState::HEAVYBASIC;
-
-		// try and fire a projectile
-		if (ProjectileClass != nullptr)
-		{
-			UWorld* const World = GetWorld();
-			if (World != nullptr)
-			{
-				const FRotator SpawnRotation = GetControlRotation();
-				// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
-				const FVector SpawnLocation = ((MuzzleLocation != nullptr) ? MuzzleLocation->GetComponentLocation() : GetActorLocation());
-
-
-				// + SpawnRotation.RotateVector(GunOffset)
-				//Set Spawn Collision Handling Override
-				FActorSpawnParameters ActorSpawnParams;
-				ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
-
-				// spawn the projectile at the muzzle
-				World->SpawnActor<AZombieShootingProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
-			}
-		}
-
-		// try and play the sound if specified
-		if (FireSound != nullptr)
-		{
-			UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
-		}
-
-		break;
-		
-		// 샷건의 경우
-	case EGunState::SHOTGUN:
-		break;
 	}
+	
+	// 일반 = 변경점 X
+	else
+	{
+		// try and fire a projectile
+		if (ProjectileClass != nullptr)
+		{
+			UWorld* const World = GetWorld();
+			if (World != nullptr)
+			{
+				const FRotator SpawnRotation = GetControlRotation();
+				// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
+				const FVector SpawnLocation = ((MuzzleLocation != nullptr) ? MuzzleLocation->GetComponentLocation() : GetActorLocation());
+
+
+				// + SpawnRotation.RotateVector(GunOffset)
+				//Set Spawn Collision Handling Override
+				FActorSpawnParameters ActorSpawnParams;
+				ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+
+				// spawn the projectile at the muzzle
+				World->SpawnActor<AZombieShootingProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+			}
+		}
+
+		// try and play the sound if specified
+		if (FireSound != nullptr)
+		{
+			UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
+		}
+	}
+
+	
 
 	// try and play a firing animation if specified
 	/*
@@ -287,4 +318,48 @@ float AMyCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEve
 	//MyTakeDamage.Broadcast();
 	return FinalDamage;
 
+}
+
+// 총 세팅
+void AMyCharacter::StartSettingGun()
+{
+	UMyGameInstance* MyGI = GetGameInstance<UMyGameInstance>();
+	FString GunName = MyGI->GetPlayerGun();
+
+	if (GunName == TEXT("HEAVYBASIC"))
+	{
+		myGun = EGunState::HEAVYBASIC;
+	}
+
+	else if (GunName == TEXT("SHOTGUN"))
+	{
+		myGun = EGunState::SHOTGUN;
+	}
+
+	else
+	{
+		myGun = EGunState::BASIC;
+	}
+}
+
+void AMyCharacter::PlaySettingGun(FString yourGun)
+{
+	UMyGameInstance* MyGI = GetGameInstance<UMyGameInstance>();
+	
+	MyGI->SetPlayerGun(yourGun);
+
+	if (yourGun == TEXT("HEAVYBASIC"))
+	{
+		myGun = EGunState::HEAVYBASIC;
+	}
+
+	else if (yourGun == TEXT("SHOTGUN"))
+	{
+		myGun = EGunState::SHOTGUN;
+	}
+
+	else
+	{
+		myGun = EGunState::BASIC;
+	}
 }

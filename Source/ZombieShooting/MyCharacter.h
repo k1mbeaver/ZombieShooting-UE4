@@ -63,6 +63,22 @@ public:
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
 		USceneComponent* MuzzleLocation;
 
+	
+	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
+		USceneComponent* ShotgunMuzzleLocationOne;
+
+	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
+		USceneComponent* ShotgunMuzzleLocationTwo;
+
+	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
+		USceneComponent* ShotgunMuzzleLocationThree;
+
+	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
+		USceneComponent* ShotgunMuzzleLocationFour;
+
+	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
+		USceneComponent* ShotgunMuzzleLocationFive;
+
 	/** Gun muzzle's offset from the characters location */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 		FVector GunOffset;
@@ -75,6 +91,10 @@ public:
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly)
 		EGunState myGun;
+
+	void StartSettingGun(); // 시작할 때 총 초기화
+
+	void PlaySettingGun(FString yourGun); // 플레이 중 총 초기화
 	/*
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
 		float AttackRange;

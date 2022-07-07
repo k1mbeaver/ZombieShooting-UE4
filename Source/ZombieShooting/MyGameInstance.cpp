@@ -118,6 +118,12 @@ void UMyGameInstance::SetPlayerBgmPower(float fBgmPower)
 	PlayerData->PlayerBgmPower = fBgmPower;
 }
 
+void UMyGameInstance::SetPlayerGun(FString yourGun)
+{
+	FPlayerDataTable* PlayerData = FPlayerTable->FindRow<FPlayerDataTable>("PlayerInfo", TEXT(""));
+	PlayerData->PlayerGun = yourGun;
+}
+
 // 몬스터 데이터값 얻어오기
 
 FString UMyGameInstance::GetMonsterName(FString MonsterType)

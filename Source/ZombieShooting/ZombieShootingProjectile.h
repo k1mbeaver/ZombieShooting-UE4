@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "MyCharacter.h"
 #include "ZombieShootingProjectile.generated.h"
 
 class USphereComponent;
@@ -37,7 +38,8 @@ public:
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
 		float AttackPower;
 
-	//UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly)
-		//EGunState myGun;
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
+		EGunState myGunState;
+
 };
 

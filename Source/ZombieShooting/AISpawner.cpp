@@ -78,6 +78,6 @@ FVector AAISpawner::GiveFVector()
 	nDestinationX = RandomTransform(-1770, 1100);
 	nDestinationY = RandomTransform(-3300, 730);
 
-	return FVector(nDestinationX, nDestinationY, 155);
+	return FVector(nDestinationX, nDestinationY, 200);
 }
 
