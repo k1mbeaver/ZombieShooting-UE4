@@ -8,6 +8,7 @@
 #include "MyAICharacter.h"
 #include "NavigationSystem.h"
 #include "MyGameInstance.h"
+#include "PlayerInterface_HUD.h"
 #include "UObject/ConstructorHelpers.h"
 
 AZombieShootingGameMode::AZombieShootingGameMode()
@@ -22,7 +23,7 @@ AZombieShootingGameMode::AZombieShootingGameMode()
 	PlayerControllerClass = AZombieShooting_PC::StaticClass();
 
 	// use our custom HUD class
-	HUDClass = AZombieShootingHUD::StaticClass();
+	HUDClass = APlayerInterface_HUD::StaticClass();
 }
 
 void AZombieShootingGameMode::PostLogin(APlayerController* NewPlayer)

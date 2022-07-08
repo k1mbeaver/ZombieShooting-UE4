@@ -14,4 +14,10 @@ class ZOMBIESHOOTING_API ATB_SHOTGUN : public ATriggerBox
 {
 	GENERATED_BODY()
 	
+private:
+	UFUNCTION(BlueprintCallable)
+		void SettingPlayerGun(AActor* myCharacter, FString yourGun);
+
+	UFUNCTION(BlueprintCallable)
+		FString ReturnGunName();
 };

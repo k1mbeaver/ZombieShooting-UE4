@@ -92,6 +92,12 @@ public:
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly)
 		EGunState myGun;
 
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly)
+		int nSpecialGunBullet;
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly)
+		bool bIsRun;
+
 	void StartSettingGun(); // 시작할 때 총 초기화
 
 	void PlaySettingGun(FString yourGun); // 플레이 중 총 초기화

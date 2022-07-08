@@ -8,6 +8,8 @@ void ATB_HEAVYBASIC::SettingPlayerGun(AActor* myCharacter, FString yourGun)
 {
 	AMyCharacter* CastMyCharacter = Cast<AMyCharacter>(myCharacter);
 
+	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("HEAVY!"));
+
 	CastMyCharacter->PlaySettingGun(yourGun);
 }
 
@@ -17,4 +19,5 @@ FString ATB_HEAVYBASIC::ReturnGunName()
 
 	return GunName;
 }
+
 

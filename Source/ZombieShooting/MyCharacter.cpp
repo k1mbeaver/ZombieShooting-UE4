@@ -11,6 +11,7 @@
 #include "CharacterAnimInstance.h"
 #include "Animation/AnimInstance.h"
 #include "MyGameInstance.h"
+#include "PlayerInterface_HUD.h"
 
 // Sets default values
 AMyCharacter::AMyCharacter()
@@ -87,6 +88,10 @@ AMyCharacter::AMyCharacter()
 
 	fPlayerHp = 100.0f;
 
+	nSpecialGunBullet = 30;
+
+	bIsRun = false;
+
 	//myGun = EGunState::BASIC;
 }
 
@@ -104,6 +109,7 @@ void AMyCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	StartSettingGun();
+	bIsRun = false;// 시작할 때 달리기 느려지는 오류 대처
 }
 
 // Called every frame
@@ -181,10 +187,17 @@ void AMyCharacter::OnFire()
 	auto AnimInstance = Cast<UCharacterAnimInstance>(GetMesh()->GetAnimInstance());
 	if (nullptr == AnimInstance) return;
 
+	APlayerInterface_HUD* HUD = Cast<APlayerInterface_HUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
+	if (HUD == nullptr) return;
+
 	AnimInstance->PlayAttackMontage();
 
 	if (myGun == EGunState::SHOTGUN)
 	{
+		nSpecialGunBullet -= 1; // 탄알 감소
+
+		HUD->SetCurrentBullet(nSpecialGunBullet, true);
+
 		// try and fire a projectile
 		if (ProjectileClass != nullptr)
 		{
@@ -231,11 +244,22 @@ void AMyCharacter::OnFire()
 		{
 			UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
 		}
+
+		if (nSpecialGunBullet == 0)
+		{
+			// 여기서 총을 BASIC으로 바꾼다.
+			PlaySettingGun("BASIC");
+		}
 	}
 	
 	// 일반 = 변경점 X
 	else
 	{
+		if (myGun == EGunState::HEAVYBASIC)
+		{
+			nSpecialGunBullet -= 1; // 탄알 감소
+			HUD->SetCurrentBullet(nSpecialGunBullet, true);
+		}
 		// try and fire a projectile
 		if (ProjectileClass != nullptr)
 		{
@@ -258,9 +282,15 @@ void AMyCharacter::OnFire()
 		}
 
 		// try and play the sound if specified
-		if (FireSound != nullptr)
+		if (FireSound != nullptr && nSpecialGunBullet != 0)
 		{
 			UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
+		}
+
+		if (myGun == EGunState::HEAVYBASIC && nSpecialGunBullet == 0)
+		{
+			// 여기서 총을 BASIC으로 바꾼다.
+			PlaySettingGun("BASIC");
 		}
 	}
 
@@ -295,17 +325,20 @@ void AMyCharacter::Attack()
 void AMyCharacter::Run()
 {
 	GetCharacterMovement()->MaxWalkSpeed *= 2.5f;
+	bIsRun = true;
 }
 
 void AMyCharacter::StopRun()
 {
-	GetCharacterMovement()->MaxWalkSpeed /= 2.5f;
+	if (bIsRun)
+	{
+		GetCharacterMovement()->MaxWalkSpeed /= 2.5f;
+	}
 }
 
 float AMyCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	float FinalDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
-
 
 	fPlayerHp -= FinalDamage;
 	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("Attack!"));
@@ -326,19 +359,33 @@ void AMyCharacter::StartSettingGun()
 	UMyGameInstance* MyGI = GetGameInstance<UMyGameInstance>();
 	FString GunName = MyGI->GetPlayerGun();
 
+	APlayerInterface_HUD* HUD = Cast<APlayerInterface_HUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
+	if (HUD == nullptr) return;	
+
 	if (GunName == TEXT("HEAVYBASIC"))
 	{
 		myGun = EGunState::HEAVYBASIC;
+		nSpecialGunBullet = 30;
+		HUD->SetGunName(GunName);
+		HUD->SetDefaultBullet(true);
+		HUD->SetCurrentBullet(nSpecialGunBullet, true);
 	}
 
 	else if (GunName == TEXT("SHOTGUN"))
 	{
 		myGun = EGunState::SHOTGUN;
+		nSpecialGunBullet = 30;
+		HUD->SetGunName(GunName);
+		HUD->SetDefaultBullet(true);
+		HUD->SetCurrentBullet(nSpecialGunBullet, true);
 	}
 
 	else
 	{
 		myGun = EGunState::BASIC;
+		HUD->SetGunName(GunName);
+		HUD->SetDefaultBullet(false);
+		HUD->SetCurrentBullet(nSpecialGunBullet, false);
 	}
 }
 
@@ -348,18 +395,33 @@ void AMyCharacter::PlaySettingGun(FString yourGun)
 	
 	MyGI->SetPlayerGun(yourGun);
 
+	APlayerInterface_HUD* HUD = Cast<APlayerInterface_HUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
+	if (HUD == nullptr) return;
+
 	if (yourGun == TEXT("HEAVYBASIC"))
 	{
 		myGun = EGunState::HEAVYBASIC;
+		nSpecialGunBullet = 30;
+		HUD->SetGunName(yourGun);
+		HUD->SetDefaultBullet(true);
+		HUD->SetCurrentBullet(nSpecialGunBullet, true);
 	}
 
 	else if (yourGun == TEXT("SHOTGUN"))
 	{
 		myGun = EGunState::SHOTGUN;
+		nSpecialGunBullet = 30;
+		HUD->SetGunName(yourGun);
+		HUD->SetDefaultBullet(true);
+		HUD->SetCurrentBullet(nSpecialGunBullet, true);
 	}
 
 	else
 	{
 		myGun = EGunState::BASIC;
+		nSpecialGunBullet = 1;
+		HUD->SetGunName(yourGun);
+		HUD->SetDefaultBullet(false);
+		HUD->SetCurrentBullet(nSpecialGunBullet, false);
 	}
 }
