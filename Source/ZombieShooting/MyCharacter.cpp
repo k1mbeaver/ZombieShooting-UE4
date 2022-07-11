@@ -86,6 +86,7 @@ AMyCharacter::AMyCharacter()
 
 	IsAttacking = false;
 
+	fMaxHp = 100.0f;
 	fPlayerHp = 100.0f;
 
 	nSpecialGunBullet = 30;
@@ -174,11 +175,19 @@ void AMyCharacter::Turn(float NewAxisValue)
 
 void AMyCharacter::ReadyFire()
 {
+	APlayerInterface_HUD* HUD = Cast<APlayerInterface_HUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
+	if (HUD == nullptr) return;
+	HUD->bPlayerCross = true;
+
 	Camera->SetRelativeLocation(FVector(450.0f, 0.0f, 30.0f));
 }
 
 void AMyCharacter::ResetReadyFire()
 {
+	APlayerInterface_HUD* HUD = Cast<APlayerInterface_HUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
+	if (HUD == nullptr) return;
+	HUD->bPlayerCross = false;
+
 	Camera->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
 }
 
@@ -342,6 +351,12 @@ float AMyCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEve
 
 	fPlayerHp -= FinalDamage;
 	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("Attack!"));
+
+	APlayerInterface_HUD* HUD = Cast<APlayerInterface_HUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
+
+	float fCurrentHP = fPlayerHp / fMaxHp;
+
+	HUD->SetPlayerHP(fCurrentHP);
 
 	if (fPlayerHp == 0) // 피가 다 까이면
 	{

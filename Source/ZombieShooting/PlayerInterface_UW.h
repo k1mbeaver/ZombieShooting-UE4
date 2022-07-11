@@ -24,6 +24,12 @@ private:
 	UPROPERTY(Meta = (BindWidget))
 		class UTextBlock* GunName;
 
+	UPROPERTY(Meta = (BindWidget))
+		class UTextBlock* TextHP;
+
+	UPROPERTY(Meta = (BindWidget))
+		class UProgressBar* HPBarFill;
+
 protected:
 	virtual void NativeOnInitialized() override;
 	//virtual void NativeConstruct() override;
@@ -32,4 +38,5 @@ public:
 	void SetCurrentBullet(int nMissionClear, bool bIsSpecial);
 	void SetDefaultBullet(bool bIsSpecial);
 	void SetGunName(FString strGunName);
+	void SetPlayerHP(float fCurrentHP);
 };

@@ -56,6 +56,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = HP)
 		float fPlayerHp;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = HP)
+		float fMaxHp;
+
 	/** AnimMontage to play each time we fire */
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	//UAnimMontage* FireAnimation;

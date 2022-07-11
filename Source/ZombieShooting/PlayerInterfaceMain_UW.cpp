@@ -18,3 +18,8 @@ void UPlayerInterfaceMain_UW::SetGunName(FString strGunName)
 {
 	PlayerInterface_WB->SetGunName(strGunName);
 }
+
+void UPlayerInterfaceMain_UW::SetPlayerHP(float fCurrentHP)
+{
+	PlayerInterface_WB->SetPlayerHP(fCurrentHP);
+}

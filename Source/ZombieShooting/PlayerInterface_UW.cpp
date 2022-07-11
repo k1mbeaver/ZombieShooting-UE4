@@ -3,6 +3,7 @@
 
 #include "PlayerInterface_UW.h"
 #include "Components/TextBlock.h"
+#include "Components/ProgressBar.h"
 
 void UPlayerInterface_UW::NativeOnInitialized()
 {
@@ -11,6 +12,8 @@ void UPlayerInterface_UW::NativeOnInitialized()
 	CurrentBullet = Cast<UTextBlock>(GetWidgetFromName(TEXT("CurrentBullet")));
 	DefaultBullet = Cast<UTextBlock>(GetWidgetFromName(TEXT("DefaultBullet")));
 	GunName = Cast<UTextBlock>(GetWidgetFromName(TEXT("GunName")));
+	TextHP = Cast<UTextBlock>(GetWidgetFromName(TEXT("TextHP")));
+	HPBarFill = Cast<UProgressBar>(GetWidgetFromName(TEXT("HPBarFill")));
 }
 
 void UPlayerInterface_UW::SetCurrentBullet(int nCurrentBullet, bool bIsSpecial)
@@ -53,3 +56,9 @@ void UPlayerInterface_UW::SetGunName(FString strGunName)
 	FText ftGunName = FText::FromString(strGunName);
 	GunName->SetText(ftGunName);
 }
+
+void UPlayerInterface_UW::SetPlayerHP(float fCurrentHP)
+{
+	HPBarFill->SetPercent(fCurrentHP);
+}
+

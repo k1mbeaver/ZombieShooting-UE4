@@ -36,6 +36,18 @@ public:
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = HP, Meta = (AllowPrivateAccess = true))
 		float fAIHp;
 
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = HP, Meta = (AllowPrivateAccess = true))
+		float fMaxHp;
+
+	//UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = HP, Meta = (AllowPrivateAccess = true))
+		//class UWidgetComponent* AIWidget;
+
+	UPROPERTY(EditDefaultsOnly, Category = HP)
+		TSubclassOf<class UUserWidget> MONSTER_HPClass;
+
+	//UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = HP, Meta = (AllowPrivateAccess = true))
+		//class UMonsterHP_UW* CastMonsterHP;
+
 	int nMonsterCount;
 protected:
 	// Called when the game starts or when spawned

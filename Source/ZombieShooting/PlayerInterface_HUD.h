@@ -22,6 +22,11 @@ public:
 	void SetCurrentBullet(int nMissionClear, bool bIsSpecial);
 	void SetDefaultBullet(bool bIsSpecial);
 	void SetGunName(FString strGunName);
+	void SetPlayerHP(float fCurrentHP);
+	virtual void DrawHUD() override;
+
+	class UTexture2D* CrosshairTex;
+	bool bPlayerCross;
 
 private:
 	TSubclassOf<class UPlayerInterfaceMain_UW> MainUIClass;

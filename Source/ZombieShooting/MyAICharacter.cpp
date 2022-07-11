@@ -4,6 +4,9 @@
 #include "MyAICharacter.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/WidgetComponent.h"
+#include "Components/ProgressBar.h"
+#include "MonsterHP_UW.h"
 #include "GameFrameWork/CharacterMovementComponent.h"
 #include "Animation/AnimInstance.h"
 #include "AIAnimInstance.h"
@@ -44,6 +47,22 @@ AMyAICharacter::AMyAICharacter()
 
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("MyAI"));
 
+	/*
+	AIWidget = CreateDefaultSubobject<UWidgetComponent>("HPBar");
+	static ConstructorHelpers::FClassFinder<UUserWidget> MONSTER_HP(TEXT("/Game/Widget/MonsterHP_WB"));
+
+	if (MONSTER_HP.Succeeded())
+	{
+		MONSTER_HPClass = MONSTER_HP.Class;
+	}
+
+	AIWidget->SetWidgetSpace(EWidgetSpace::World);
+	AIWidget->SetRelativeLocation(FVector(0.0f, 0.0f, 120.0f));
+	AIWidget->SetWidgetClass(MONSTER_HPClass);
+	AIWidget->SetVisibility(true);
+	AIWidget->RegisterComponent();
+	*/
+
 	AIControllerClass = AZombieShooting_AC::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 
@@ -61,6 +80,7 @@ void AMyAICharacter::BeginPlay()
 
 	nMonsterCount = MyGI->GetPlayerStage();
 	fAIHp = MyGI->GetMonsterHp("GeneralMonster");
+	fMaxHp = fAIHp;
 	AttackPower = MyGI->GetMonsterAttackDamage("GeneralMonster");
 }
 
@@ -166,6 +186,7 @@ void AMyAICharacter::AttackByPlayer(float DamageAmount)
 		MyGI->nMonsterDeath++;
 	}
 
+	// 스테이지의 몬스터가 모두 죽으면
 	if (MyGI->nMonsterDeath == nMonsterCount)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("GameEnd!"));

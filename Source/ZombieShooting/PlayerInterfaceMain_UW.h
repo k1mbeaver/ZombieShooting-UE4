@@ -22,4 +22,5 @@ public:
 	void SetCurrentBullet(int nMissionClear, bool bIsSpecial);
 	void SetDefaultBullet(bool bIsSpecial);
 	void SetGunName(FString strGunName);
+	void SetPlayerHP(float fCurrentHP);
 };
