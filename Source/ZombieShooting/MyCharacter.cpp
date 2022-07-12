@@ -11,6 +11,7 @@
 #include "CharacterAnimInstance.h"
 #include "Animation/AnimInstance.h"
 #include "MyGameInstance.h"
+#include "Particles/ParticleSystem.h"
 #include "PlayerInterface_HUD.h"
 
 // Sets default values
@@ -72,6 +73,13 @@ AMyCharacter::AMyCharacter()
 	if (PLAYER_ANIM.Succeeded())
 	{
 		GetMesh()->SetAnimInstanceClass(PLAYER_ANIM.Class);
+	}
+
+	// bullet effect
+	static ConstructorHelpers::FObjectFinder<UParticleSystem> FIRE(TEXT("ParticleSystem'/Game/ParagonMurdock/FX/Particles/Abilities/SpreadShot/FX/P_SpreadShotImpact_Radial.P_SpreadShotImpact_Radial'"));
+	if (FIRE.Succeeded())
+	{
+		FireParticle = FIRE.Object;
 	}
 
 	GetCharacterMovement()->JumpZVelocity = 400.0f;
@@ -195,6 +203,8 @@ void AMyCharacter::OnFire()
 {
 	auto AnimInstance = Cast<UCharacterAnimInstance>(GetMesh()->GetAnimInstance());
 	if (nullptr == AnimInstance) return;
+
+	GameStatic->SpawnEmitterAttached(FireParticle, MuzzleLocation, FName("MuzzleLocation"));
 
 	APlayerInterface_HUD* HUD = Cast<APlayerInterface_HUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
 	if (HUD == nullptr) return;

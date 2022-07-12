@@ -3,6 +3,8 @@
 #include "ZombieShootingProjectile.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Particles/ParticleSystem.h"
 #include "MyAICharacter.h"
 #include "MyGameInstance.h"
 
@@ -29,6 +31,22 @@ AZombieShootingProjectile::AZombieShootingProjectile()
 	ProjectileMovement->bRotationFollowsVelocity = true;
 	ProjectileMovement->bShouldBounce = true;
 
+	// bullet effect
+	static ConstructorHelpers::FObjectFinder<UParticleSystem> GROUND(TEXT("ParticleSystem'/Game/ParagonMurdock/FX/Particles/Abilities/Primary/FX/P_PlasmaShot_Hit_World.P_PlasmaShot_Hit_World'"));
+	if (GROUND.Succeeded())
+	{
+		GroundParticle = GROUND.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<UParticleSystem> BLOOD(TEXT("ParticleSystem'/Game/ParagonGrux/FX/Particles/Abilities/Primary/FX/P_Grux_ApplyBleed.P_Grux_ApplyBleed'"));
+	if (BLOOD.Succeeded())
+	{
+		BloodParticle = BLOOD.Object;
+	}
+
+	//MuzzleLocation = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzleLocation"));
+	//MuzzleLocation->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
+
 	// Die after 3 seconds by default
 	InitialLifeSpan = 3.0f;
 
@@ -42,32 +60,35 @@ void AZombieShootingProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* Othe
 	UMyGameInstance* MyGI = GetGameInstance<UMyGameInstance>();
 	FString GunName = MyGI->GetPlayerGun();
 
-	if (GunName == TEXT("HEAVYBASIC"))
+	//if (Cast<AMyAICharacter>(Hit.Actor)) // 맞은 대상이 몬스터일 때
+	if (Cast<AMyAICharacter>(OtherActor)) // 맞은 대상이 몬스터일 때
 	{
-		AttackPower = 100.0f;
-	}
+		if (GunName == TEXT("HEAVYBASIC"))
+		{
+			AttackPower = 100.0f;
+		}
 
-	else if (GunName == TEXT("SHOTGUN"))
-	{
-		AttackPower = 50.0f;
-	}
+		else if (GunName == TEXT("SHOTGUN"))
+		{
+			AttackPower = 50.0f;
+		}
 
-	else
-	{
-		AttackPower = 20.0f;
-	}
+		else
+		{
+			AttackPower = 20.0f;
+		}
 
-	if (Cast<AMyAICharacter>(Hit.Actor)) // 맞은 대상이 몬스터일 때
-	{
 		AMyAICharacter* HitCharacter = Cast<AMyAICharacter>(Hit.Actor);
 		
 		HitCharacter->AttackByPlayer(AttackPower);
+		GameStatic->SpawnEmitterAtLocation(GetWorld(), BloodParticle, Hit.ImpactPoint);
 
 		Destroy();
 	}
 
 	else
 	{
+		GameStatic->SpawnEmitterAtLocation(GetWorld(), GroundParticle, Hit.ImpactPoint);
 		Destroy();
 	}
 	/*
@@ -78,4 +99,9 @@ void AZombieShootingProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* Othe
 		Destroy();
 	}
 	*/
+}
+
+void AZombieShootingProjectile::StartParticle()
+{
+	//GameStatic->SpawnEmitterAttached(GroundParticle, MuzzleLocation, FName("MuzzleLocation"));
 }

@@ -101,6 +101,12 @@ public:
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly)
 		bool bIsRun;
 
+	UPROPERTY()
+		class UParticleSystem* FireParticle;
+
+	UPROPERTY()
+		class UGameplayStatics* GameStatic;
+
 	void StartSettingGun(); // 시작할 때 총 초기화
 
 	void PlaySettingGun(FString yourGun); // 플레이 중 총 초기화

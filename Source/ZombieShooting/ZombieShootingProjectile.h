@@ -30,6 +30,9 @@ public:
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
+	UFUNCTION()
+		void StartParticle();
+
 	/** Returns CollisionComp subobject **/
 	USphereComponent* GetCollisionComp() const { return CollisionComp; }
 	/** Returns ProjectileMovement subobject **/
@@ -40,6 +43,18 @@ public:
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
 		EGunState myGunState;
+
+	//UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
+		//USceneComponent* MuzzleLocation;
+
+	UPROPERTY(VisibleAnywhere, Category = Particle)
+		class UParticleSystem* GroundParticle;
+
+	UPROPERTY(VisibleAnywhere, Category = Particle)
+		class UParticleSystem* BloodParticle;
+
+	UPROPERTY()
+		class UGameplayStatics* GameStatic;
 
 };
 

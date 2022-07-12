@@ -12,6 +12,7 @@
 #include "AIAnimInstance.h"
 #include "ZombieShooting_AC.h"
 #include "MyCharacter.h"
+#include "Particles/ParticleSystem.h"
 #include "DrawDebugHelpers.h"
 #include "MyGameInstance.h"
 
@@ -47,6 +48,11 @@ AMyAICharacter::AMyAICharacter()
 
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("MyAI"));
 
+	// To Damage Particle
+	MuzzleLocation = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzleLocation"));
+	MuzzleLocation->SetupAttachment(GetCapsuleComponent());
+	MuzzleLocation->SetRelativeLocation(FVector(50.0f, 20.0f, 35.0f));
+
 	/*
 	AIWidget = CreateDefaultSubobject<UWidgetComponent>("HPBar");
 	static ConstructorHelpers::FClassFinder<UUserWidget> MONSTER_HP(TEXT("/Game/Widget/MonsterHP_WB"));
@@ -62,6 +68,13 @@ AMyAICharacter::AMyAICharacter()
 	AIWidget->SetVisibility(true);
 	AIWidget->RegisterComponent();
 	*/
+
+	// Damage effect
+	static ConstructorHelpers::FObjectFinder<UParticleSystem> DAMAGE(TEXT("ParticleSystem'/Game/ParagonGrux/FX/Particles/Abilities/Primary/FX/P_Grux_ApplyBleed.P_Grux_ApplyBleed'"));
+	if (DAMAGE.Succeeded())
+	{
+		DamageParticle = DAMAGE.Object;
+	}
 
 	AIControllerClass = AZombieShooting_AC::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
@@ -173,6 +186,8 @@ void AMyAICharacter::AttackByPlayer(float DamageAmount)
 	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("AIHit!"));
 
 	UMyGameInstance* MyGI = GetGameInstance<UMyGameInstance>();
+
+	//GameStatic->SpawnEmitterAttached(DamageParticle, MuzzleLocation, FName("MuzzleLocation"));
 
 	if (fAIHp == 0) // 피가 다 까이면
 	{

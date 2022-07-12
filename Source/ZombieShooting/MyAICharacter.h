@@ -45,6 +45,16 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = HP)
 		TSubclassOf<class UUserWidget> MONSTER_HPClass;
 
+	// damage particle
+	UPROPERTY()
+		class UParticleSystem* DamageParticle;
+
+	UPROPERTY()
+		class UGameplayStatics* GameStatic;
+
+	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
+		USceneComponent* MuzzleLocation;
+
 	//UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = HP, Meta = (AllowPrivateAccess = true))
 		//class UMonsterHP_UW* CastMonsterHP;
 
