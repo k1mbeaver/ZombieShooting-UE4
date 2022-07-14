@@ -20,16 +20,31 @@ public:
 	virtual void SetupInputComponent() override;
  
 private:
-	//UPROPERTY()
+	UPROPERTY()
 	class AMyCharacter* myCharacter;
 
-protected:
-	//UFUNCTION()
-	void MoveForward(float Val);
-	//UFUNCTION()
-	void MoveRight(float Val);
-	//UFUNCTION()
-	void TurnAtRate(float Rate);
-	//UFUNCTION()
-	void LookUpAtRate(float Rate);
+private:
+	void UpDown(float NewAxisValue);
+
+	void LeftRight(float NewAxisValue);
+
+	void LookUp(float NewAxisValue);
+
+	void Turn(float NewAxisValue);
+
+	void OnFire();
+
+	void Run();
+
+	void StopRun();
+
+	void Jump();
+
+	void StopJumping();
+
+	void ReadyFire();
+
+	void ResetReadyFire();
+
+	void PlayerPause();
 };

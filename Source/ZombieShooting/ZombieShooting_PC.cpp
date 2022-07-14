@@ -3,6 +3,7 @@
 
 #include "ZombieShooting_PC.h"
 #include "MyCharacter.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 AZombieShooting_PC::AZombieShooting_PC()
 {
@@ -12,8 +13,11 @@ AZombieShooting_PC::AZombieShooting_PC()
 void AZombieShooting_PC::OnPossess(APawn* aPawn)
 {
 	Super::OnPossess(aPawn);
-	myCharacter = Cast<AMyCharacter>(aPawn);
-	//GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("Success!"));
+	if (aPawn)
+	{
+		myCharacter = Cast<AMyCharacter>(aPawn);
+		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("Success!"));
+	}
 }
 
 void AZombieShooting_PC::PostInitializeComponents()
@@ -29,61 +33,137 @@ void AZombieShooting_PC::SetupInputComponent()
 
 	//AABCharacter* myCharacter = Cast<AABCharacter>(myPawn);
 
-	// 움직임
+	// 캐릭터 이동 함수
+	//InputComponent->BindAxis(TEXT("MoveForward"), this, &AZombieShooting_PC::UpDown);
+	//InputComponent->BindAxis(TEXT("MoveRight"), this, &AZombieShooting_PC::LeftRight);
+	//InputComponent->BindAxis(TEXT("LookUp"), this, &AZombieShooting_PC::LookUp);
+	//InputComponent->BindAxis(TEXT("Turn"), this, &AZombieShooting_PC::Turn);
 
-	InputComponent->BindAxis(TEXT("MoveForward"), this, &AZombieShooting_PC::MoveForward);
-	InputComponent->BindAxis(TEXT("MoveRight"), this, &AZombieShooting_PC::MoveRight);
-	InputComponent->BindAxis(TEXT("LookUp"), this, &AZombieShooting_PC::LookUpAtRate);
-	InputComponent->BindAxis(TEXT("Turn"), this, &AZombieShooting_PC::TurnAtRate);
+	// 캐릭터 점프 함수
+	InputComponent->BindAction("Jump", IE_Pressed, this, &AZombieShooting_PC::Jump);
+	InputComponent->BindAction("Jump", IE_Released, this, &AZombieShooting_PC::StopJumping);
 
-	// 액션
+	// 캐릭터 공격 함수
+	InputComponent->BindAction("Fire", IE_Pressed, this, &AZombieShooting_PC::OnFire);
 
-	//InputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &AABPlayerController::Jump);
-	//InputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Released, this, &AABPlayerController::CheckMission);
-	//InputComponent->BindAction(TEXT("Attack"), EInputEvent::IE_Pressed, this, &AABPlayerController::Attack);
-	//InputComponent->BindAction(TEXT("Run"), EInputEvent::IE_Pressed, this, &AABPlayerController::Run);
-	//InputComponent->BindAction(TEXT("Run"), EInputEvent::IE_Released, this, &AABPlayerController::StopRun);
+	// 캐릭터 달리기 함수
+	InputComponent->BindAction("Run", IE_Pressed, this, &AZombieShooting_PC::Run);
+	InputComponent->BindAction("Run", IE_Released, this, &AZombieShooting_PC::StopRun);
+
+	// 캐릭터 견착 함수
+	InputComponent->BindAction("ReadyFire", IE_Pressed, this, &AZombieShooting_PC::ReadyFire);
+	InputComponent->BindAction("ReadyFire", IE_Released, this, &AZombieShooting_PC::ResetReadyFire);
+
+	// 플레이어 일시정지 함수
+	InputComponent->BindAction("Pause", IE_Pressed, this, &AZombieShooting_PC::PlayerPause);
 }
 
-
-void AZombieShooting_PC::MoveForward(float Value)
+/*
+void AZombieShooting_PC::UpDown(float NewAxisValue)
 {
-	//APawn* const myPawn = GetPawn();
-	//AZombieShootingCharacter* myCharacter = Cast<AZombieShootingCharacter>(myPawn);
-	if (Value != 0.0f)
+	if (myCharacter)
 	{
-		FVector Direction = FRotationMatrix(GetControlRotation()).GetUnitAxis(EAxis::X);
-		Direction.Z = 0.0f;
-		Direction.Normalize();
-		myCharacter->AddMovementInput(Direction, Value);
+		myCharacter->UpDown(NewAxisValue);
+		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("UpDown!"));
 	}
 }
 
-void AZombieShooting_PC::MoveRight(float Value)
+void AZombieShooting_PC::LeftRight(float NewAxisValue)
 {
-	//APawn* const myPawn = GetPawn();
-	//AZombieShootingCharacter* myCharacter = Cast<AZombieShootingCharacter>(myPawn);
-	if (Value != 0.0f)
+	if (myCharacter)
 	{
-		FVector Direction = FRotationMatrix(GetControlRotation()).GetUnitAxis(EAxis::Y);
-		Direction.Z = 0.0f;
-		Direction.Normalize();
-		myCharacter->AddMovementInput(Direction, Value);
+		myCharacter->LeftRight(NewAxisValue);
+		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("LeftRight!"));
 	}
 }
 
-void AZombieShooting_PC::TurnAtRate(float Rate)
+void AZombieShooting_PC::LookUp(float NewAxisValue)
 {
-	//APawn* const myPawn = GetPawn();
-	//AZombieShootingCharacter* myCharacter = Cast<AZombieShootingCharacter>(myPawn);
-	// calculate delta for this frame from the rate information
-	myCharacter->AddControllerYawInput(Rate);
+	if (myCharacter)
+	{
+		myCharacter->LookUp(NewAxisValue);
+		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("LookUp!"));
+	}
 }
 
-void AZombieShooting_PC::LookUpAtRate(float Rate)
+void AZombieShooting_PC::Turn(float NewAxisValue)
 {
-	//APawn* const myPawn = GetPawn();
-	//AZombieShootingCharacter* myCharacter = Cast<AZombieShootingCharacter>(myPawn);
-	// calculate delta for this frame from the rate information
-	myCharacter->AddControllerPitchInput(Rate);
+	if (myCharacter)
+	{
+		myCharacter->Turn(NewAxisValue);
+		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("Turn!"));
+	}
+}
+*/
+
+void AZombieShooting_PC::Jump()
+{
+	if (myCharacter)
+	{
+		myCharacter->Jump();
+		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("Jump!"));
+	}
+}
+
+void AZombieShooting_PC::StopJumping()
+{
+	if (myCharacter)
+	{
+		myCharacter->StopJumping();
+		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("StopJumping!"));
+	}
+}
+
+void AZombieShooting_PC::ReadyFire()
+{
+	if (myCharacter)
+	{
+		myCharacter->ReadyFire();
+		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("ReadyFire!"));
+	}
+}
+
+void AZombieShooting_PC::ResetReadyFire()
+{
+	if (myCharacter)
+	{
+		myCharacter->ResetReadyFire();
+		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("ResetReadyFire!"));
+	}
+}
+
+void AZombieShooting_PC::OnFire()
+{
+	if (myCharacter)
+	{
+		myCharacter->OnFire();
+		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("OnFire!"));
+	}
+}
+
+void AZombieShooting_PC::Run()
+{
+	if (myCharacter)
+	{
+		myCharacter->Run();
+		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("Run!"));
+	}
+}
+
+void AZombieShooting_PC::StopRun()
+{
+	if (myCharacter)
+	{
+		myCharacter->StopRun();
+		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("StopRun!"));
+	}
+}
+
+void AZombieShooting_PC::PlayerPause()
+{
+	if (myCharacter)
+	{
+		myCharacter->PlayerPause();
+		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("PlayerPause!"));
+	}
 }

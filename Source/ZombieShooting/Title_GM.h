@@ -16,4 +16,5 @@ class ZOMBIESHOOTING_API ATitle_GM : public AGameModeBase
 	
 public:
 	ATitle_GM();
+	virtual void PostLogin(APlayerController* NewPlayer) override; // 이 과정에서 플레이어 설정이 진행된다.
 };

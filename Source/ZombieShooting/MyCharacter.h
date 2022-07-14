@@ -34,6 +34,8 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void PostInitializeComponents() override;
 	float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamasgeCauser) override;
+	virtual void Jump() override;
+	virtual void StopJumping() override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -101,6 +103,15 @@ public:
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly)
 		bool bIsRun;
 
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly)
+		bool bPlayerPause;
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly)
+		bool bCanMove;
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly)
+		bool bIsPlayerControlled;
+
 	UPROPERTY()
 		class UParticleSystem* FireParticle;
 
@@ -130,7 +141,7 @@ public:
 	//UPROPERTY(VisibleInstanceOnly, Category = Animation)
 		//class UABAnimInstance* ABAnim;
 
-private:
+public:
 	void UpDown(float NewAxisValue);
 
 	void LeftRight(float NewAxisValue);
@@ -150,4 +161,6 @@ private:
 	void ReadyFire();
 
 	void ResetReadyFire();
+
+	void PlayerPause();
 };

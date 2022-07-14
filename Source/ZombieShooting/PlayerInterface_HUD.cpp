@@ -93,3 +93,33 @@ void APlayerInterface_HUD::DrawHUD()
 		Canvas->DrawItem(TileItem);
 	}
 }
+
+void APlayerInterface_HUD::SetGameOverUIVisible()
+{
+	MainUIObject->SetGameOverUIVisible();
+}
+
+void APlayerInterface_HUD::SetGameOverUIHidden()
+{
+	MainUIObject->SetGameOverUIHidden();
+}
+
+void APlayerInterface_HUD::SetGameClearUIVisible()
+{
+	MainUIObject->SetGameClearUIVisible();
+}
+
+void APlayerInterface_HUD::SetGameClearUIHidden()
+{
+	MainUIObject->SetGameClearUIHidden();
+}
+
+void APlayerInterface_HUD::SetGamePauseUIVisible()
+{
+	MainUIObject->SetGamePauseUIVisible();
+}
+
+void APlayerInterface_HUD::SetGamePauseUIHidden()
+{
+	MainUIObject->SetGamePauseUIHidden();
+}

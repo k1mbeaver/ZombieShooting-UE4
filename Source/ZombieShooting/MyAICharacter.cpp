@@ -12,6 +12,7 @@
 #include "AIAnimInstance.h"
 #include "ZombieShooting_AC.h"
 #include "MyCharacter.h"
+#include "PlayerInterface_HUD.h"
 #include "Particles/ParticleSystem.h"
 #include "DrawDebugHelpers.h"
 #include "MyGameInstance.h"
@@ -117,9 +118,9 @@ void AMyAICharacter::PostInitializeComponents()
 	AIAnim = Cast<UAIAnimInstance>(GetMesh()->GetAnimInstance());
 
 	// 끄기전에 주석 처리후 빌드
-	//AIAnim->OnMontageEnded.AddDynamic(this, &AMyAICharacter::OnAttackMontageEnded);
+	AIAnim->OnMontageEnded.AddDynamic(this, &AMyAICharacter::OnAttackMontageEnded);
 
-	//AIAnim->OnOnCollisonStart_Attack.AddUObject(this, &AMyAICharacter::AttackCheck);
+	AIAnim->OnOnCollisonStart_Attack.AddUObject(this, &AMyAICharacter::AttackCheck);
 }
 	
 
@@ -206,7 +207,15 @@ void AMyAICharacter::AttackByPlayer(float DamageAmount)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("GameEnd!"));
 		MyGI->SetPlayerStage();
-		UGameplayStatics::OpenLevel(GetWorld(), FName("ConceptMap"));
+		//UGameplayStatics::OpenLevel(GetWorld(), FName("ConceptMap"));
+
+		APlayerInterface_HUD* HUD = Cast<APlayerInterface_HUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
+
+		FInputModeUIOnly InputMode;
+		UGameplayStatics::GetPlayerController(this, 0)->SetInputMode(InputMode);
+		UGameplayStatics::GetPlayerController(this, 0)->SetShowMouseCursor(true);
+
+		HUD->SetGameClearUIVisible();
 	}
 
 }

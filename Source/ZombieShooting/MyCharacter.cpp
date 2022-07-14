@@ -13,10 +13,14 @@
 #include "MyGameInstance.h"
 #include "Particles/ParticleSystem.h"
 #include "PlayerInterface_HUD.h"
+#include "Kismet/KismetMathLibrary.h"
 
 // Sets default values
 AMyCharacter::AMyCharacter()
 {
+
+	//AutoPossessPlayer = EAutoReceiveInput::Player0;
+
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SPRINGARM"));
@@ -100,6 +104,9 @@ AMyCharacter::AMyCharacter()
 	nSpecialGunBullet = 30;
 
 	bIsRun = false;
+	bPlayerPause = false;
+	bCanMove = true;
+	bIsPlayerControlled = false;
 
 	//myGun = EGunState::BASIC;
 }
@@ -128,6 +135,7 @@ void AMyCharacter::Tick(float DeltaTime)
 
 }
 
+
 void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -137,7 +145,7 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAxis(TEXT("MoveRight"), this, &AMyCharacter::LeftRight);
 	PlayerInputComponent->BindAxis(TEXT("LookUp"), this, &AMyCharacter::LookUp);
 	PlayerInputComponent->BindAxis(TEXT("Turn"), this, &AMyCharacter::Turn);
-
+	/*
 	// 캐릭터 점프 함수
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
@@ -152,23 +160,32 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	// 캐릭터 견착 함수
 	PlayerInputComponent->BindAction("ReadyFire", IE_Pressed, this, &AMyCharacter::ReadyFire);
 	PlayerInputComponent->BindAction("ReadyFire", IE_Released, this, &AMyCharacter::ResetReadyFire);
+
+	// 플레이어 일시정지 함수
+	PlayerInputComponent->BindAction("Pause", IE_Pressed, this, &AMyCharacter::PlayerPause);
+	*/
 }
 
 void AMyCharacter::UpDown(float NewAxisValue)
 {
-	FVector Direction = FRotationMatrix(GetControlRotation()).GetUnitAxis(EAxis::X);
-	Direction.Z = 0.0f;
-	Direction.Normalize();
-	AddMovementInput(Direction, NewAxisValue);
-
+	if (bCanMove)
+	{
+		FVector Direction = FRotationMatrix(GetControlRotation()).GetUnitAxis(EAxis::X);
+		Direction.Z = 0.0f;
+		Direction.Normalize();
+		AddMovementInput(Direction, NewAxisValue);
+	}
 }
 
 void AMyCharacter::LeftRight(float NewAxisValue)
 {
-	FVector Direction = FRotationMatrix(GetControlRotation()).GetUnitAxis(EAxis::Y);
-	Direction.Z = 0.0f;
-	Direction.Normalize();
-	AddMovementInput(Direction, NewAxisValue);
+	if (bCanMove)
+	{
+		FVector Direction = FRotationMatrix(GetControlRotation()).GetUnitAxis(EAxis::Y);
+		Direction.Z = 0.0f;
+		Direction.Normalize();
+		AddMovementInput(Direction, NewAxisValue);
+	}
 }
 
 void AMyCharacter::LookUp(float NewAxisValue)
@@ -197,6 +214,16 @@ void AMyCharacter::ResetReadyFire()
 	HUD->bPlayerCross = false;
 
 	Camera->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
+}
+
+void AMyCharacter::Jump()
+{
+	Super::Jump();
+}
+
+void AMyCharacter::StopJumping()
+{
+	Super::StopJumping();
 }
 
 void AMyCharacter::OnFire()
@@ -355,6 +382,18 @@ void AMyCharacter::StopRun()
 	}
 }
 
+void AMyCharacter::PlayerPause()
+{
+	APlayerInterface_HUD* HUD = Cast<APlayerInterface_HUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
+
+	GameStatic->SetGamePaused(GetWorld(), true);
+
+	FInputModeUIOnly InputMode;
+	UGameplayStatics::GetPlayerController(this, 0)->SetInputMode(InputMode);
+	UGameplayStatics::GetPlayerController(this, 0)->SetShowMouseCursor(true);
+	HUD->SetGamePauseUIVisible();
+}
+
 float AMyCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	float FinalDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
@@ -371,6 +410,18 @@ float AMyCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEve
 	if (fPlayerHp == 0) // 피가 다 까이면
 	{
 		CharacterAnim->SetDeadAnim();
+		
+		bCanMove = false;
+
+		FInputModeUIOnly InputMode;
+		UGameplayStatics::GetPlayerController(this, 0)->SetInputMode(InputMode);
+		UGameplayStatics::GetPlayerController(this, 0)->SetShowMouseCursor(true);
+
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+		GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECR_Ignore);
+		GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
+
+		HUD->SetGameOverUIVisible();
 	}
 
 	//MyTakeDamage.Broadcast();

@@ -23,6 +23,12 @@ public:
 	void SetDefaultBullet(bool bIsSpecial);
 	void SetGunName(FString strGunName);
 	void SetPlayerHP(float fCurrentHP);
+	void SetGameOverUIVisible();
+	void SetGameOverUIHidden();
+	void SetGameClearUIVisible();
+	void SetGameClearUIHidden();
+	void SetGamePauseUIVisible();
+	void SetGamePauseUIHidden();
 	virtual void DrawHUD() override;
 
 	class UTexture2D* CrosshairTex;
