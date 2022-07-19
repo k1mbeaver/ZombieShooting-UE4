@@ -39,11 +39,20 @@ public:
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = HP, Meta = (AllowPrivateAccess = true))
 		float fMaxHp;
 
-	//UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = HP, Meta = (AllowPrivateAccess = true))
-		//class UWidgetComponent* AIWidget;
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = HP, Meta = (AllowPrivateAccess = true))
+		class UWidgetComponent* AIWidget;
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = HP, Meta = (AllowPrivateAccess = true))
+		class UStaticMeshComponent* HPStatic;
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = HP, Meta = (AllowPrivateAccess = true))
+		class UAIHPBar_UW* MonsterHpBar;
 
 	UPROPERTY(EditDefaultsOnly, Category = HP)
 		TSubclassOf<class UUserWidget> MONSTER_HPClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = HP)
+		TSubclassOf<class UAIHPBar_UW> MONSTER_HPTClass;
 
 	// damage particle
 	UPROPERTY()
@@ -54,6 +63,15 @@ public:
 
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
 		USceneComponent* MuzzleLocation;
+	
+	//UPROPERTY(VisibleAnywhere, BlueprintReadWrite, BlueprintSetter = SetCharacterHP)
+		//UAIHPBar_UW* CharacterHP;
+
+	//UFUNCTION(BlueprintSetter)
+	//void SetCharacterHP(UAIHPBar_UW* GetCharacterHP)
+	//{
+	//	CharacterHP = GetCharacterHP;
+	//}
 
 	//UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = HP, Meta = (AllowPrivateAccess = true))
 		//class UMonsterHP_UW* CastMonsterHP;

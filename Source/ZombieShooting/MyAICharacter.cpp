@@ -4,6 +4,7 @@
 #include "MyAICharacter.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/StaticMeshComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Components/ProgressBar.h"
 #include "MonsterHP_UW.h"
@@ -16,6 +17,7 @@
 #include "Particles/ParticleSystem.h"
 #include "DrawDebugHelpers.h"
 #include "MyGameInstance.h"
+#include "AIHPBar_UW.h"
 
 // Sets default values
 AMyAICharacter::AMyAICharacter()
@@ -54,20 +56,38 @@ AMyAICharacter::AMyAICharacter()
 	MuzzleLocation->SetupAttachment(GetCapsuleComponent());
 	MuzzleLocation->SetRelativeLocation(FVector(50.0f, 20.0f, 35.0f));
 
-	/*
+	
 	AIWidget = CreateDefaultSubobject<UWidgetComponent>("HPBar");
-	static ConstructorHelpers::FClassFinder<UUserWidget> MONSTER_HP(TEXT("/Game/Widget/MonsterHP_WB"));
+	static ConstructorHelpers::FClassFinder<UUserWidget> MONSTER_HP(TEXT("/Game/Widget/AIHPBar_WB"));
 
 	if (MONSTER_HP.Succeeded())
 	{
 		MONSTER_HPClass = MONSTER_HP.Class;
 	}
 
+	AIWidget->SetupAttachment(GetCapsuleComponent());
 	AIWidget->SetWidgetSpace(EWidgetSpace::World);
-	AIWidget->SetRelativeLocation(FVector(0.0f, 0.0f, 120.0f));
+	AIWidget->SetDrawSize(FVector2D(100, 10));
+	AIWidget->SetRelativeLocation(FVector(0.0f, 0.0f, 140.0f));
 	AIWidget->SetWidgetClass(MONSTER_HPClass);
 	AIWidget->SetVisibility(true);
 	AIWidget->RegisterComponent();
+	
+	/*
+	HPStatic = CreateDefaultSubobject<UStaticMeshComponent>("HPBar");
+	static ConstructorHelpers::FClassFinder<UUserWidget> MONSTER_HP(TEXT("/Game/Widget/AIHPBar_WB"));
+
+	if (MONSTER_HP.Succeeded())
+	{
+		MONSTER_HPClass = MONSTER_HP.Class;
+	}
+
+	//MonsterHpBar->SetWidgetSpace(EWidgetSpace::World);
+	//MonsterHpBar->SetDrawSize(FVector2D(100, 10));
+	HPStatic->SetRelativeLocation(FVector(0.0f, 0.0f, 140.0f));
+	//MonsterHpBar->SetWidgetClass(MONSTER_HPClass);
+	//MonsterHpBar->SetVisibility(true);
+	//MonsterHpBar->RegisterComponent();
 	*/
 
 	// Damage effect
@@ -96,6 +116,8 @@ void AMyAICharacter::BeginPlay()
 	fAIHp = MyGI->GetMonsterHp("GeneralMonster");
 	fMaxHp = fAIHp;
 	AttackPower = MyGI->GetMonsterAttackDamage("GeneralMonster");
+
+	//MonsterHpBar = Cast<UAIHPBar_UW>(AIWidget->GetWidgetClass());
 }
 
 // Called every frame
@@ -118,9 +140,9 @@ void AMyAICharacter::PostInitializeComponents()
 	AIAnim = Cast<UAIAnimInstance>(GetMesh()->GetAnimInstance());
 
 	// 끄기전에 주석 처리후 빌드
-	AIAnim->OnMontageEnded.AddDynamic(this, &AMyAICharacter::OnAttackMontageEnded);
+	//AIAnim->OnMontageEnded.AddDynamic(this, &AMyAICharacter::OnAttackMontageEnded);
 
-	AIAnim->OnOnCollisonStart_Attack.AddUObject(this, &AMyAICharacter::AttackCheck);
+	//AIAnim->OnOnCollisonStart_Attack.AddUObject(this, &AMyAICharacter::AttackCheck);
 }
 	
 
@@ -185,6 +207,8 @@ void AMyAICharacter::AttackByPlayer(float DamageAmount)
 {
 	fAIHp -= DamageAmount;
 	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("AIHit!"));
+
+	MonsterHpBar->SetMonsterHP(fAIHp / fMaxHp);
 
 	UMyGameInstance* MyGI = GetGameInstance<UMyGameInstance>();
 
