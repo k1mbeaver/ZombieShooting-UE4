@@ -56,7 +56,7 @@ AMyAICharacter::AMyAICharacter()
 	MuzzleLocation->SetupAttachment(GetCapsuleComponent());
 	MuzzleLocation->SetRelativeLocation(FVector(50.0f, 20.0f, 35.0f));
 
-	
+/*
 	AIWidget = CreateDefaultSubobject<UWidgetComponent>("HPBar");
 	static ConstructorHelpers::FClassFinder<UUserWidget> MONSTER_HP(TEXT("/Game/Widget/AIHPBar_WB"));
 
@@ -72,7 +72,7 @@ AMyAICharacter::AMyAICharacter()
 	AIWidget->SetWidgetClass(MONSTER_HPClass);
 	AIWidget->SetVisibility(true);
 	AIWidget->RegisterComponent();
-	
+*/
 	/*
 	HPStatic = CreateDefaultSubobject<UStaticMeshComponent>("HPBar");
 	static ConstructorHelpers::FClassFinder<UUserWidget> MONSTER_HP(TEXT("/Game/Widget/AIHPBar_WB"));
@@ -112,10 +112,12 @@ void AMyAICharacter::BeginPlay()
 
 	UMyGameInstance* MyGI = GetGameInstance<UMyGameInstance>();
 
-	nMonsterCount = MyGI->GetPlayerStage();
-	fAIHp = MyGI->GetMonsterHp("GeneralMonster");
-	fMaxHp = fAIHp;
-	AttackPower = MyGI->GetMonsterAttackDamage("GeneralMonster");
+	//nMonsterCount = MyGI->GetPlayerStage();
+	//fAIHp = MyGI->GetMonsterHp("GeneralMonster");
+	//fMaxHp = fAIHp;
+	//AttackPower = MyGI->GetMonsterAttackDamage("GeneralMonster");
+
+	InitializeAI(MyGI->strSkeletalMesh);
 
 	//MonsterHpBar = Cast<UAIHPBar_UW>(AIWidget->GetWidgetClass());
 }
@@ -208,7 +210,7 @@ void AMyAICharacter::AttackByPlayer(float DamageAmount)
 	fAIHp -= DamageAmount;
 	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("AIHit!"));
 
-	MonsterHpBar->SetMonsterHP(fAIHp / fMaxHp);
+	//MonsterHpBar->SetMonsterHP(fAIHp / fMaxHp);
 
 	UMyGameInstance* MyGI = GetGameInstance<UMyGameInstance>();
 
@@ -255,4 +257,22 @@ void AMyAICharacter::StopAIController()
 	AZombieShooting_AC* AIController = Cast<AZombieShooting_AC>(GetController());
 
 	AIController->StopAI();
+}
+
+void AMyAICharacter::InitializeAI(FString MonsterType)
+{
+	UMyGameInstance* MyGI = GetGameInstance<UMyGameInstance>();
+
+	nMonsterCount = MyGI->GetPlayerStage();
+	fAIHp = MyGI->GetMonsterHp(MonsterType);
+	fMaxHp = fAIHp;
+	AttackPower = MyGI->GetMonsterAttackDamage(MonsterType);
+
+	if (MonsterType == "GeneralMonster")
+	{
+		GetCharacterMovement()->MaxWalkSpeed = MyGI->GetMonsterSpeed(MonsterType);
+		return;
+	}
+	GetMesh()->SetSkeletalMesh(MyGI->GetMonsterSkeletalMesh(MonsterType));
+	GetCharacterMovement()->MaxWalkSpeed = MyGI->GetMonsterSpeed(MonsterType);
 }

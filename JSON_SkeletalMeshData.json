@@ -1,0 +1,14 @@
+[
+	{
+		"Name": "Speed",
+		"MonsterMesh": "SkeletalMesh'/Game/ParagonGrux/Characters/Heroes/Grux/Skins/Tier_2/Grux_Qilin/Meshes/GruxQilin.GruxQilin'"
+	},
+	{
+		"Name": "Tank",
+		"MonsterMesh": "SkeletalMesh'/Game/ParagonGrux/Characters/Heroes/Grux/Skins/Tier_1_5/Chestplate/Meshes/GruxChestplate.GruxChestplate'"
+	},
+	{
+		"Name": "Damage",
+		"MonsterMesh": "SkeletalMesh'/Game/ParagonGrux/Characters/Heroes/Grux/Skins/Tier_2/Grux_Beetle_Red/Meshes/GruxBeetleRed.GruxBeetleRed'"
+	}
+]

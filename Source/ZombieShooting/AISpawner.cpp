@@ -75,9 +75,33 @@ int AAISpawner::RandomTransform(int min, int max)
 FVector AAISpawner::GiveFVector()
 {
 	int nDestinationX, nDestinationY;
-	nDestinationX = RandomTransform(-1770, 1100);
-	nDestinationY = RandomTransform(-3300, 730);
+	nDestinationX = RandomTransform(-110, 550); // -110 ~ 550 (x) // 700 ~ -2100 (y)
+	nDestinationY = RandomTransform(-2100, 700);
 
-	return FVector(nDestinationX, nDestinationY, 200);
+	return FVector(nDestinationX, nDestinationY, 250);
 }
 
+void AAISpawner::SetMonsterOption(int nIndex)
+{
+	UMyGameInstance* MyGI = GetGameInstance<UMyGameInstance>();
+
+	if (nIndex % 20 == 0)
+	{
+		MyGI->strSkeletalMesh = "Tank";
+	}
+
+	else if (nIndex % 10 == 0)
+	{
+		MyGI->strSkeletalMesh = "Speed";
+	}
+
+	else if (nIndex % 5 == 0)
+	{
+		MyGI->strSkeletalMesh = "Damage";
+	}
+
+	else
+	{
+		MyGI->strSkeletalMesh = "GeneralMonster";
+	}
+}

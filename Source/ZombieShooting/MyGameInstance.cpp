@@ -4,14 +4,19 @@
 #include "MyGameInstance.h"
 #include "PlayerDataTableClass.h"
 #include "MonsterDataTableClass.h"
+#include "StaticMeshDataTableClass.h"
 
 UMyGameInstance::UMyGameInstance()
 {
 	FString PlayerDataPath = TEXT("DataTable'/Game/File/Json/PlayerData.PlayerData'");
 	FString MonsterDataPath = TEXT("DataTable'/Game/File/Json/MonsterData.MonsterData'");
+	FString SkeletalMeshDataPath = TEXT("DataTable'/Game/File/Json/SkeletalMeshData.SkeletalMeshData'");
+
 	//E:/Unreal/ZombieShooting/Content/File/Json/PlayerData.uasset
 	static ConstructorHelpers::FObjectFinder<UDataTable> DT_ABPLAYER(*PlayerDataPath);
 	static ConstructorHelpers::FObjectFinder<UDataTable> DT_ABMONSTER(*MonsterDataPath);
+	static ConstructorHelpers::FObjectFinder<UDataTable> DT_ABSKELETALMESH(*SkeletalMeshDataPath);
+
 	if (DT_ABPLAYER.Succeeded())
 	{
 		FPlayerTable = DT_ABPLAYER.Object;
@@ -21,8 +26,14 @@ UMyGameInstance::UMyGameInstance()
 	{
 		FMonsterTable = DT_ABMONSTER.Object;
 	}
+
+	if (DT_ABSKELETALMESH.Succeeded())
+	{
+		FSkeletalMeshTable = DT_ABSKELETALMESH.Object;
+	}
 	
 	nMonsterDeath = 0;
+	strSkeletalMesh = "GeneralMonster";
 }
 
 /*
@@ -160,6 +171,15 @@ float UMyGameInstance::GetMonsterAttackSpeed(FString MonsterType)
 	float MonsterAttackSpeed = MonsterData->MonsterAttackSpeed;
 	return MonsterAttackSpeed;
 }
+
+
+USkeletalMesh* UMyGameInstance::GetMonsterSkeletalMesh(FString MonsterType)
+{
+	FStaticMeshDataTable* SkeletalMeshData = FSkeletalMeshTable->FindRow<FStaticMeshDataTable>(*MonsterType, TEXT(""));
+	USkeletalMesh* MonsterSkeletalMesh = SkeletalMeshData->MonsterMesh;
+	return MonsterSkeletalMesh;
+}
+
 
 // 여기서는 PlayerInfo말고 Default를 사용하게 해보자!
 void UMyGameInstance::SetPlayerDataDefault()

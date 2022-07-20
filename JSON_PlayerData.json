@@ -3,15 +3,15 @@
 		"Name": "PlayerInfo",
 		"PlayerName": "Beaver",
 		"PlayerHp": 100,
-		"PlayerGun": "Riffle",
-		"PlayerStage": 50,
+		"PlayerGun": "BASIC",
+		"PlayerStage": 1,
 		"PlayerBgmPower": 3
 	},
 	{
 		"Name": "Default",
 		"PlayerName": "Player",
 		"PlayerHp": 100,
-		"PlayerGun": "Punch",
+		"PlayerGun": "BASIC",
 		"PlayerStage": 1,
 		"PlayerBgmPower": 5
 	}

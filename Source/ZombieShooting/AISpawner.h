@@ -36,6 +36,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 		FVector GiveFVector();
 
+	UFUNCTION(BlueprintCallable)
+		void SetMonsterOption(int nIndex);
+
 	UPROPERTY(VisibleAnywhere, Category = Monster)
 		int nMonsterDeath;
 

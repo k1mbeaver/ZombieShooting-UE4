@@ -4,35 +4,35 @@
 		"MonsterName": "Goblyn",
 		"MonsterHp": 100,
 		"MonsterType": "General",
-		"MonsterSpeed": 5,
+		"MonsterSpeed": 200,
 		"MonsterAttackDamage": 5,
 		"MonsterAttackSpeed": 5
 	},
 	{
-		"Name": "BossSpeed",
+		"Name": "Speed",
 		"MonsterName": "KingGoblyn",
-		"MonsterHp": 1000,
+		"MonsterHp": 250,
 		"MonsterType": "BossAttackSpeed",
-		"MonsterSpeed": 10,
+		"MonsterSpeed": 400,
 		"MonsterAttackDamage": 10,
 		"MonsterAttackSpeed": 10
 	},
 	{
-		"Name": "BossDamage",
+		"Name": "Damage",
 		"MonsterName": "KingGoblyn",
-		"MonsterHp": 1000,
+		"MonsterHp": 500,
 		"MonsterType": "BossAttackDamage",
-		"MonsterSpeed": 5,
-		"MonsterAttackDamage": 20,
+		"MonsterSpeed": 200,
+		"MonsterAttackDamage": 30,
 		"MonsterAttackSpeed": 5
 	},
 	{
-		"Name": "BossTankHeal",
+		"Name": "Tank",
 		"MonsterName": "KingGoblyn",
-		"MonsterHp": 2000,
+		"MonsterHp": 1000,
 		"MonsterType": "BossHp",
-		"MonsterSpeed": 5,
-		"MonsterAttackDamage": 5,
+		"MonsterSpeed": 150,
+		"MonsterAttackDamage": 20,
 		"MonsterAttackSpeed": 5
 	}
 ]

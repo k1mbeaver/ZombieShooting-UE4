@@ -38,9 +38,13 @@ public:
 	float GetMonsterSpeed(FString MonsterType);
 	float GetMonsterAttackDamage(FString MonsterType);
 	float GetMonsterAttackSpeed(FString MonsterType);
+	USkeletalMesh* GetMonsterSkeletalMesh(FString MonsterType);
 
 	UPROPERTY()
 		int nMonsterDeath;
+
+	UPROPERTY()
+		FString strSkeletalMesh;
 
 	// Json 관련 (현재는 미사용)
 	//void JsonSave();
@@ -52,4 +56,7 @@ private:
 
 	UPROPERTY()
 		UDataTable* FMonsterTable;
+
+	UPROPERTY()
+		UDataTable* FSkeletalMeshTable;
 };
