@@ -5,6 +5,8 @@
 #include "PlayerDataTableClass.h"
 #include "MonsterDataTableClass.h"
 #include "StaticMeshDataTableClass.h"
+#include "BGMDataTableClass.h"
+#include "Sound/SoundCue.h"
 
 UMyGameInstance::UMyGameInstance()
 {
@@ -180,6 +182,13 @@ USkeletalMesh* UMyGameInstance::GetMonsterSkeletalMesh(FString MonsterType)
 	return MonsterSkeletalMesh;
 }
 
+USoundCue* UMyGameInstance::GetSoundCueBGM(FString Title)
+{
+	FBGMDataTable* BGMData = FBGMTable->FindRow<FBGMDataTable>(*Title, TEXT(""));
+	USoundCue* BGM = BGMData->BGM;
+	return BGM;
+}
+
 
 // 여기서는 PlayerInfo말고 Default를 사용하게 해보자!
 void UMyGameInstance::SetPlayerDataDefault()
@@ -191,3 +200,4 @@ void UMyGameInstance::SetPlayerDataDefault()
 	PlayerData->PlayerGun = DefaultData->PlayerGun;
 	PlayerData->PlayerStage = DefaultData->PlayerStage;
 }
+

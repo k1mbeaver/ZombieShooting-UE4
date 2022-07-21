@@ -40,6 +40,9 @@ public:
 	float GetMonsterAttackSpeed(FString MonsterType);
 	USkeletalMesh* GetMonsterSkeletalMesh(FString MonsterType);
 
+	// 브금 데이터 값 얻어오기
+	USoundCue* GetSoundCueBGM(FString Title);
+
 	UPROPERTY()
 		int nMonsterDeath;
 
@@ -59,4 +62,7 @@ private:
 
 	UPROPERTY()
 		UDataTable* FSkeletalMeshTable;
+
+	UPROPERTY()
+		UDataTable* FBGMTable;
 };

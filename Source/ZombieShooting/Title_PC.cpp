@@ -7,6 +7,7 @@
 #include "MainTitle_HUD.h"
 #include "Kismet/GameplayStatics.h"
 #include "MyGameInstance.h"
+#include "AudioDevice.h"
 
 ATitle_PC::ATitle_PC()
 {
@@ -87,7 +88,6 @@ void ATitle_PC::CheckSetting()
 	MyGI->SetPlayerBgmPower(HUD->GetBgmPower()); // 여기서 값을 GameInstance에 넣는다.
 	// 그 후에 setting 창을 숨긴다.
 
-	
 	HUD->HiddenSetting();
 }
 
