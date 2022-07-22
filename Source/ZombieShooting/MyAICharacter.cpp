@@ -142,9 +142,9 @@ void AMyAICharacter::PostInitializeComponents()
 	AIAnim = Cast<UAIAnimInstance>(GetMesh()->GetAnimInstance());
 
 	// 끄기전에 주석 처리후 빌드
-	//AIAnim->OnMontageEnded.AddDynamic(this, &AMyAICharacter::OnAttackMontageEnded);
+	AIAnim->OnMontageEnded.AddDynamic(this, &AMyAICharacter::OnAttackMontageEnded);
 
-	//AIAnim->OnOnCollisonStart_Attack.AddUObject(this, &AMyAICharacter::AttackCheck);
+	AIAnim->OnOnCollisonStart_Attack.AddUObject(this, &AMyAICharacter::AttackCheck);
 }
 	
 
@@ -169,16 +169,17 @@ void AMyAICharacter::AttackCheck()
 		FCollisionShape::MakeSphere(AttackRadius),
 		Params);
 
-#if ENABLE_DRAW_DEBUG
-	FVector TraceVec = GetActorForwardVector() * AttackRange;
-	FVector Center = GetActorLocation() + TraceVec * 0.5f;
-	float HalfHeight = AttackRange * 0.5f + AttackRadius;
-	FQuat CapsuleRot = FRotationMatrix::MakeFromZ(TraceVec).ToQuat();
-	FColor DrawColor = bResult ? FColor::Green : FColor::Red;
-	float DebugLifeTime = 5.0f;
+//#if ENABLE_DRAW_DEBUG
+	//FVector TraceVec = GetActorForwardVector() * AttackRange;
+	//FVector Center = GetActorLocation() + TraceVec * 0.5f;
+	//float HalfHeight = AttackRange * 0.5f + AttackRadius;
+	//FQuat CapsuleRot = FRotationMatrix::MakeFromZ(TraceVec).ToQuat();
+	//FColor DrawColor = bResult ? FColor::Green : FColor::Red;
+	//float DebugLifeTime = 5.0f;
 
 	// 이거는 에디터에서만 사용하는거
 	
+	/*
 	DrawDebugCapsule(GetWorld(),
 		Center,
 		HalfHeight,
@@ -187,10 +188,10 @@ void AMyAICharacter::AttackCheck()
 		DrawColor,
 		false,
 		DebugLifeTime);
-	
+	*/
 	//GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("PlayerPunch!")); // 플레이어가 펀치하는지 확인용
 
-#endif
+//#endif
 
 
 	if (bResult)
@@ -220,6 +221,9 @@ void AMyAICharacter::AttackByPlayer(float DamageAmount)
 	{
 		// 사망 애니메이션 출력
 		AIAnim->SetDeadAnim();
+
+		// 사망 음성
+		UGameplayStatics::PlaySoundAtLocation(this, DeathSound, GetActorLocation());
 		
 		// 비헤이비어 트리 멈춤
 		StopAIController();

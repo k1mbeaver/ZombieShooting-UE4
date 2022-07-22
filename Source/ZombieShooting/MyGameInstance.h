@@ -41,7 +41,7 @@ public:
 	USkeletalMesh* GetMonsterSkeletalMesh(FString MonsterType);
 
 	// 브금 데이터 값 얻어오기
-	USoundCue* GetSoundCueBGM(FString Title);
+	USoundWave* GetSoundWaveBGM(FString Title);
 
 	UPROPERTY()
 		int nMonsterDeath;

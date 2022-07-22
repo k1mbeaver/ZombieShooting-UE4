@@ -15,7 +15,7 @@ struct FBGMDataTable : public FTableRowBase
 public:
 	// 타이틀 브금
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		class USoundCue* BGM;
+		class USoundWave* BGM;
 };
 
 UCLASS()

@@ -13,7 +13,7 @@ struct FStaticMeshDataTable : public FTableRowBase
 	GENERATED_USTRUCT_BODY()
 
 public:
-	// Qilin(스피드)
+	// 몬스터 스켈레탈 메시
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		USkeletalMesh* MonsterMesh;
 };

@@ -182,10 +182,10 @@ USkeletalMesh* UMyGameInstance::GetMonsterSkeletalMesh(FString MonsterType)
 	return MonsterSkeletalMesh;
 }
 
-USoundCue* UMyGameInstance::GetSoundCueBGM(FString Title)
+USoundWave* UMyGameInstance::GetSoundWaveBGM(FString Title)
 {
 	FBGMDataTable* BGMData = FBGMTable->FindRow<FBGMDataTable>(*Title, TEXT(""));
-	USoundCue* BGM = BGMData->BGM;
+	USoundWave* BGM = BGMData->BGM;
 	return BGM;
 }
 
